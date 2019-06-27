@@ -14,7 +14,7 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class Gonderi {
+public class Delivery {
 
     @Id
     private String id;
@@ -23,13 +23,13 @@ public class Gonderi {
     private Customer customer;
 
     @Field("courierid")
-    private String courierID;
+    private String courierid;
 
     @Field("branch")
     private Branch branch;
 
     @Field("warehouse")
-    private WareHouse wareHouse;
+    private WareHouse warehouse;
 
     @Field("status")
     private String status;  //enum olarak değiştirilecek
@@ -37,5 +37,15 @@ public class Gonderi {
     @Field("actions")
     private Actions actions;
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Actions getActions() {
+        return actions;
+    }
 }

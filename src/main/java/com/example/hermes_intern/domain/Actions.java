@@ -14,16 +14,31 @@ import java.util.Date;
 @Document
 public class Actions {
 
-    @Field("datecourierrecieved")
+    @Field("dateCourierRecieved")
     private Date dateCourierRecieved;
 
-    @Field("datedeliveredtobranch")
+    @Field("dateDeliveredToBranch")
     private Date dateDeliveredToBranch;
 
-    @Field("dateleftbranch")
+    @Field("dateLeftBranch")
     private Date dateLeftBranch;
 
-    @Field("datedeliveredtowarehouse")
-    private Date dateDeliveredToWareHouse;
+    @Field("dateDeliveredToWarehouse")
+    private Date dateDeliveredToWarehouse;
 
+    public void setDateCourierRecieved(Date dateCourierRecieved) {
+        this.dateCourierRecieved = dateCourierRecieved;
+    }
+
+    public void setDateDeliveredToBranch(Date dateDeliveredToBranch) {
+        this.dateDeliveredToBranch = dateDeliveredToBranch;
+    }
+
+    public void setDateLeftBranch(Date dateLeftBranch) {
+        this.dateLeftBranch = dateLeftBranch;
+    }
+
+    public void setDateDeliveredToWarehouse(Date dateDeliveredToWarehouse) {
+        this.dateDeliveredToWarehouse = dateDeliveredToWarehouse;
+    }
 }
