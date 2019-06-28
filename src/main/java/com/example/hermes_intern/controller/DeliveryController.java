@@ -29,4 +29,9 @@ public class DeliveryController {
         return this.deliveryService.create(delivery);
     }
 
-}
+    //Müşteriler iade id bilgisi gönderip, iadenin son durumunu görüntülerler.
+    @GetMapping("/location/{id}")
+    public Mono<Delivery> getLocation(@PathVariable("id") String id) {
+        return this.deliveryService.getLocation(id);
+    }
+ }
