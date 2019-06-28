@@ -46,9 +46,4 @@ public class DeliveryService {
         return this.deliveries.save(delivery);
     }
 
-    public Flux<Delivery> getAllByStatus(@RequestParam("status") String status) {
-        return this.deliveries.findByStatus(status);
-    }
-
-
 }
