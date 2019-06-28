@@ -1,6 +1,7 @@
 package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.domain.Delivery;
+import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,18 @@ public class DeliveryController {
     }
 
     @GetMapping("")
-    public Flux<Delivery> getAll(@RequestParam(value = "status", required = false) String status) {
-        return this.deliveryService.getAll(status);
+    public Flux<Delivery> getAll() {
+        return this.deliveryService.getAll();
     }
 
     @PostMapping("")
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
         return this.deliveryService.create(delivery);
+    }
+
+    @GetMapping("/count")
+    public Mono<DeliveryCount> getDeliveryCount(@RequestParam(value = "status", required = false) String status) {
+        return deliveryService.getDeliveryCount(status);
     }
 
 
