@@ -12,4 +12,6 @@ import reactor.core.publisher.Flux;
 @ViewIndexed(designDoc = "delivery", viewName = "all")
 public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepository<Delivery, String> {
 
+    Flux<Delivery> findByStatus(String status);
+
 }
