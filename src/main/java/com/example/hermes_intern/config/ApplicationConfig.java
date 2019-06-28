@@ -47,6 +47,6 @@ class ApplicationConfig extends AbstractReactiveCouchbaseConfiguration {
 
     @Override
     public IndexManager indexManager() {
-        return new IndexManager(true, false, false);    //auto indexing for views only
+        return new IndexManager(true, true, false);    //auto indexing for views only
     }
 }
