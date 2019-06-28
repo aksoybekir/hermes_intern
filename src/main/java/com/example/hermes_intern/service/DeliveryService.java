@@ -29,12 +29,14 @@ public class DeliveryService {
     }
 
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
+        Date defaultDate = null;
+
         delivery.setId(UUID.randomUUID().toString());
         delivery.getCustomer().setId(UUID.randomUUID().toString());
         delivery.getActions().setDateCourierRecieved(new Date());
-        delivery.getActions().setDateDeliveredToBranch(new Date());
-        delivery.getActions().setDateDeliveredToWarehouse(new Date());
-        delivery.getActions().setDateLeftBranch(new Date());
+        delivery.getActions().setDateDeliveredToBranch(defaultDate);
+        delivery.getActions().setDateDeliveredToWarehouse(defaultDate);
+        delivery.getActions().setDateLeftBranch(defaultDate);
         return this.deliveries.save(delivery);
     }
 
