@@ -48,4 +48,8 @@ public class Delivery {
     public Actions getActions() {
         return actions;
     }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status;}
 }
