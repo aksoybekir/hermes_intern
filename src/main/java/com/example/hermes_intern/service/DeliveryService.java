@@ -71,7 +71,8 @@ public class DeliveryService {
             deliveryActions.setId(id);
             deliveryActions.setActions(response.getActions());
             return  deliveryActions;
-        });    }
+        });
+    }
 
     public Mono<DeliveryCount> getDeliveryCount(@RequestParam(value = "status", required = false) String status) {
         return this.deliveries.countByStatus(status).map(aLong -> {
@@ -80,7 +81,9 @@ public class DeliveryService {
             deliveryCount.setStatus(status);
             return deliveryCount;
         });
+    }
 
-
+    public Flux<Delivery> getCourierDeliveries(@PathVariable("courierid") String courierid) {
+        return this.deliveries.findByCourierid(courierid);
     }
 }

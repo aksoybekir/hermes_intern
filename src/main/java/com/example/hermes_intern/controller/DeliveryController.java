@@ -57,6 +57,12 @@ public class DeliveryController {
     @GetMapping("/actions/{id}")
     public Mono<DeliveryActions> getActions(@PathVariable("id") String id) {
         return this.deliveryService.getActions(id);
+    } 
+
+    @RequestMapping(method = RequestMethod.GET, params = {"courierid"})
+    public Flux<Delivery> getCourierDeliveries(@RequestParam String courierid) {
+        return this.deliveryService.getCourierDeliveries(courierid);
     }
+
 }
 
