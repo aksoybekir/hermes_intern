@@ -12,5 +12,8 @@ import reactor.core.publisher.Mono;
 @N1qlPrimaryIndexed
 @ViewIndexed(designDoc = "delivery", viewName = "all")
 public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepository<Delivery, String> {
+
+    Mono<Long> countByStatus(String status);
     Mono<Delivery> findById(String id);
+
 }
