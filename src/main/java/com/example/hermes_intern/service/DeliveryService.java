@@ -27,9 +27,12 @@ public class DeliveryService {
 
     @View
     public Flux<Delivery> getAll() {
-
         return this.deliveries.findAll();
+    }
 
+    public Flux<Delivery> getByStatus(String status)
+    {
+        return this.deliveries.findDeliveriesByStatus(status);
     }
 
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
