@@ -23,17 +23,16 @@ public class DeliveryController {
         this.deliveryService = deliveryService;
     }
 
-    @GetMapping("")
-    public Flux<Delivery> getAll(@RequestParam(value = "status", required = false) String status) {
-        if (status!=null)
-        {
-            return this.deliveryService.getByStatus(status);
-        }
-        else
-        {
-            return this.deliveryService.getAll();
-        }
+    @RequestMapping(method = RequestMethod.GET)
+    public Flux<Delivery> getAll() {
+        return this.deliveryService.getAll();
     }
+
+    @RequestMapping(method = RequestMethod.GET, params = {"status"})
+    public Flux<Delivery> getByStatus(@RequestParam(value = "status", required = false) String status) {
+        return this.deliveryService.getByStatus(status);
+    }
+
     @PostMapping("")
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
         return this.deliveryService.create(delivery);
@@ -59,5 +58,5 @@ public class DeliveryController {
     public Mono<DeliveryActions> getActions(@PathVariable("id") String id) {
         return this.deliveryService.getActions(id);
     }
- }
+}
 
