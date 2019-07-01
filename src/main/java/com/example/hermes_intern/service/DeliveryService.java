@@ -8,6 +8,7 @@ import com.example.hermes_intern.model.DeliveryCheckIn;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
 import org.springframework.stereotype.Service;
@@ -113,30 +114,42 @@ public class DeliveryService {
 
     public Mono<DeliveryCount> getDeliveyCountByStatusToday(@RequestParam String status) {
 
-        Flux<Delivery> result = null;
+        Flux<Delivery> deliveries = null;
 
         if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
 
-            result = this.deliveries.getDeliveryCountByDateCourierRecieved(status, getStartOfToday(), getStartOfTomarrow());
+            deliveries = this.deliveries.getDeliveryCountByDateCourierRecieved(status, getStartOfToday(), getStartOfTomarrow());
         } else if (status.equals(DeliveryStatus.IN_BRANCH.toString())) {
 
-            result = this.deliveries.getDeliveryCountByDateDeliveredToBranch(status, getStartOfToday(), getStartOfTomarrow());
+            deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranch(status, getStartOfToday(), getStartOfTomarrow());
         } else if (status.equals(DeliveryStatus.ON_WAY_WAREHOUSE.toString())) {
 
-            result = this.deliveries.getDeliveryCountByDateLeftBranch(status, getStartOfToday(), getStartOfTomarrow());
+            deliveries = this.deliveries.getDeliveryCountByDateLeftBranch(status, getStartOfToday(), getStartOfTomarrow());
         } else if (status.equals(DeliveryStatus.IN_WAREHOUSE.toString())) {
 
-            result = this.deliveries.getDeliveryCountByDateDeliveredToWarehouse(status, getStartOfToday(), getStartOfTomarrow());
+            deliveries = this.deliveries.getDeliveryCountByDateDeliveredToWarehouse(status, getStartOfToday(), getStartOfTomarrow());
         }
 
 
-        return result.count().map(aLong -> {
+        return deliveries.count().map(aLong -> {
             DeliveryCount deliveryCount = new DeliveryCount();
             deliveryCount.setDeliveryCount(aLong);
             deliveryCount.setStatus(status);
             return deliveryCount;
         });
     }
+
+    public Flux<Delivery> getCourierDeliveriesToday(@RequestParam String courierid, @RequestParam String status) {
+        Flux<Delivery> deliveries = null;
+        if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
+            deliveries = this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
+        } else if (status.equals(DeliveryStatus.IN_BRANCH.toString())) {
+
+            deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranchAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
+        }
+        return deliveries;
+    }
+
 
     public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner){
 
