@@ -15,5 +15,6 @@ public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepo
 
     Mono<Long> countByStatus(String status);
     Mono<Delivery> findById(String id);
+    Flux<Delivery> findByCourierid(String courierid);
 
 }
