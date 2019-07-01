@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping(value = "/deliveries")
 public class DeliveryController {
@@ -29,7 +27,7 @@ public class DeliveryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, params = {"status"})
-    public Flux<Delivery> getByStatus(@RequestParam(value = "status", required = false) String status) {
+    public Flux<Delivery> getByStatus(@RequestParam String status) {
         return this.deliveryService.getByStatus(status);
     }
 
@@ -40,8 +38,13 @@ public class DeliveryController {
 
 
     @GetMapping("/count")
-    public Mono<DeliveryCount> getDeliveryCount(@RequestParam(value = "status", required = false) String status) {
+    public Mono<DeliveryCount> getDeliveryCount(@RequestParam String status) {
         return deliveryService.getDeliveryCount(status);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/count/today", params = {"status"})
+    public Mono<DeliveryCount> getDeliveyCountByStatusToday(@RequestParam String status) {
+        return this.deliveryService.getDeliveyCountByStatusToday(status);
     }
 
 
@@ -57,7 +60,7 @@ public class DeliveryController {
     @GetMapping("/actions/{id}")
     public Mono<DeliveryActions> getActions(@PathVariable("id") String id) {
         return this.deliveryService.getActions(id);
-    } 
+    }
 
     @RequestMapping(method = RequestMethod.GET, params = {"courierid"})
     public Flux<Delivery> getCourierDeliveries(@RequestParam String courierid) {
