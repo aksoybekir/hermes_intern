@@ -1,4 +1,5 @@
-package com.example.hermes_intern.domain;
+package com.example.hermes_intern.model;
+
 
 import com.couchbase.client.java.repository.annotation.Field;
 import lombok.*;
@@ -11,13 +12,13 @@ import org.springframework.data.couchbase.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class Customer {
+public class DeliveryLocation {
 
     @Field("id")
     private String id;
 
-    @Field("address")
-    private Address address;
+    @Field("Location")
+    private  String location;
 
     public String getId() {
         return id;
@@ -25,5 +26,13 @@ public class Customer {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
