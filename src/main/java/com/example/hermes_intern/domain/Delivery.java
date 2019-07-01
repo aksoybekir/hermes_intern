@@ -37,6 +37,43 @@ public class Delivery {
     @Field("actions")
     private Actions actions;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getCourierid() {
+        return courierid;
+    }
+
+    public void setCourierid(String courierid) {
+        this.courierid = courierid;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public WareHouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(WareHouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public void setActions(Actions actions) {
+        this.actions = actions;
+    }
+
+
     public void setId(String id) {
         this.id = id;
     }

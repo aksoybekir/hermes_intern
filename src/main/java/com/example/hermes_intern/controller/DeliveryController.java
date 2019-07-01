@@ -2,6 +2,7 @@ package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryActions;
+import com.example.hermes_intern.model.DeliveryCheckIn;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.service.DeliveryService;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/deliveries")
@@ -63,6 +62,12 @@ public class DeliveryController {
     public Flux<Delivery> getCourierDeliveries(@RequestParam String courierid) {
         return this.deliveryService.getCourierDeliveries(courierid);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/checkin", params = {"id","owner"})
+    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam String id, @RequestParam String owner) {
+        return this.deliveryService.checkInDelivery(id,owner);
+    }
+
 
 }
 

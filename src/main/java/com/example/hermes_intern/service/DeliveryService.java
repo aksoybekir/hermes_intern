@@ -1,8 +1,10 @@
 package com.example.hermes_intern.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
 import com.example.hermes_intern.model.DeliveryActions;
+import com.example.hermes_intern.model.DeliveryCheckIn;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
@@ -17,7 +19,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Date;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class DeliveryService {
@@ -85,5 +86,38 @@ public class DeliveryService {
 
     public Flux<Delivery> getCourierDeliveries(@PathVariable("courierid") String courierid) {
         return this.deliveries.findByCourierid(courierid);
+    }
+
+    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner){
+
+        return this.deliveries.findById(id).map(response -> {
+            Delivery delivery = new Delivery();
+
+            delivery.setId(response.getId());
+            delivery.setWarehouse(response.getWarehouse());
+            delivery.setCustomer(response.getCustomer());
+            delivery.setCourierid(response.getCourierid());
+            delivery.setBranch(response.getBranch());
+            delivery.setActions(response.getActions());
+
+            if(owner.equals("bw")){
+                delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
+            }else if(owner.equals("ww")){
+                delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
+            }
+
+            DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+            try {
+                this.deliveries.save(delivery).subscribe();
+                deliveryCheckIn.setId(delivery.getId());
+                deliveryCheckIn.setSuccess(true);
+                return deliveryCheckIn;
+            }catch (Error e){
+                deliveryCheckIn.setId(delivery.getId());
+                deliveryCheckIn.setSuccess(false);
+                return deliveryCheckIn;
+            }
+
+        });
     }
 }
