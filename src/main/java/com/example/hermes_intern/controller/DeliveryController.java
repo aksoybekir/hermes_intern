@@ -67,5 +67,11 @@ public class DeliveryController {
         return this.deliveryService.getCourierDeliveries(courierid);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/today", params = {"courierid", "status"})
+    public Flux<Delivery> getCourierDeliveriesToday(@RequestParam String courierid, @RequestParam String status) {
+        return this.deliveryService.getCourierDeliveriesToday(courierid, status);
+    }
+
+
 }
 
