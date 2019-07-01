@@ -36,6 +36,12 @@ public class DeliveryService {
 
     }
 
+    public Flux<Delivery> getByStatus(String status)
+    {
+        return this.deliveries.findDeliveriesByStatus(status);
+    }
+
+
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
         Date defaultDate = null;
 
