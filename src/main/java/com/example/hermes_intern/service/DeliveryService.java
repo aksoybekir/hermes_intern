@@ -1,6 +1,5 @@
 package com.example.hermes_intern.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
 import com.example.hermes_intern.model.DeliveryActions;
@@ -8,7 +7,6 @@ import com.example.hermes_intern.model.DeliveryCheckIn;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
 import org.springframework.stereotype.Service;

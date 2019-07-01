@@ -7,6 +7,10 @@ public class DeliveryCheckIn {
     @Field("id")
     private String id;
 
+
+    @Field("success")
+    private boolean success;
+
     public String getId() {
         return id;
     }
@@ -23,7 +27,5 @@ public class DeliveryCheckIn {
         this.success = success;
     }
 
-    @Field("success")
-    private boolean success;
 
 }
