@@ -138,16 +138,12 @@ public class DeliveryService {
 
     public Flux<Delivery> getCourierDeliveriesToday(@RequestParam String courierid, @RequestParam String status) {
         Flux<Delivery> deliveries = null;
-        System.out.println("aaaaaaaaaaaaaaa");
         if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
-            System.out.println("bbbbbbbbbbbbbbbbbbbbbb");
             deliveries = this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
         } else if (status.equals(DeliveryStatus.IN_BRANCH.toString())) {
 
-            System.out.println("ccccccccccccccccccccccccc");
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranchAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
         }
-        System.out.println("ddddddddddddddddddddd");
         return deliveries;
     }
 }
