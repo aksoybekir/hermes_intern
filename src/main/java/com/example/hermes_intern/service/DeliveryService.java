@@ -110,7 +110,7 @@ public class DeliveryService {
 
     public Mono<DeliveryCount> getDeliveyCountByStatusToday(@RequestParam String status) {
 
-        Mono<Long> result = null;
+        Flux<Delivery> result = null;
 
         if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
 
@@ -127,7 +127,7 @@ public class DeliveryService {
         }
 
 
-        return result.map(aLong -> {
+        return result.count().map(aLong -> {
             DeliveryCount deliveryCount = new DeliveryCount();
             deliveryCount.setDeliveryCount(aLong);
             deliveryCount.setStatus(status);

@@ -23,16 +23,16 @@ public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepo
 
     Flux<Delivery> findDeliveriesByStatus(String status);
 
-    @Query("select count(meta().id) from `HermesDemo` data where status=$1 and actions.dateCourierRecieved BETWEEN $2 AND $3")
-    Mono<Long> getDeliveryCountByDateCourierRecieved(String status, long today, long tomarrow);
+    @Query("select *, META().id AS _ID, META().cas AS _CAS from `HermesDemo` data where status=$1 and actions.dateCourierRecieved BETWEEN $2 AND $3")
+    Flux<Delivery> getDeliveryCountByDateCourierRecieved(String status, long today, long tomarrow);
 
-    @Query("select count(meta().id) from `HermesDemo` data where status=$1 and actions.dateDeliveredToBranch BETWEEN $2 AND $3")
-    Mono<Long> getDeliveryCountByDateDeliveredToBranch(String status, long today, long tomarrow);
+    @Query("select *, META().id AS _ID, META().cas AS _CAS from `HermesDemo` data where status=$1 and actions.dateDeliveredToBranch BETWEEN $2 AND $3")
+    Flux<Delivery> getDeliveryCountByDateDeliveredToBranch(String status, long today, long tomarrow);
 
-    @Query("select count(meta().id) from `HermesDemo` data where status=$1 and actions.dateLeftBranch BETWEEN $2 AND $3")
-    Mono<Long> getDeliveryCountByDateLeftBranch(String status, long today, long tomarrow);
+    @Query("select *, META().id AS _ID, META().cas AS _CAS from `HermesDemo` data where status=$1 and actions.dateLeftBranch BETWEEN $2 AND $3")
+    Flux<Delivery> getDeliveryCountByDateLeftBranch(String status, long today, long tomarrow);
 
-    @Query("select count(meta().id) from `HermesDemo` data where status=$1 and actions.dateDeliveredToWarehouse BETWEEN $2 AND $3")
-    Mono<Long> getDeliveryCountByDateDeliveredToWarehouse(String status, long today, long tomarrow);
+    @Query("select *, META().id AS _ID, META().cas AS _CAS from `HermesDemo` data where status=$1 and actions.dateDeliveredToWarehouse BETWEEN $2 AND $3")
+    Flux<Delivery> getDeliveryCountByDateDeliveredToWarehouse(String status, long today, long tomarrow);
 
 }
