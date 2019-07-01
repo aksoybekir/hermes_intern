@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,6 +25,8 @@ import java.util.UUID;
 public class DeliveryService {
 
     private final ReactiveDeliveryRepository deliveries;
+    Date today = Calendar.getInstance().getTime();
+
 
     @Autowired
     public DeliveryService(ReactiveDeliveryRepository deliveries) {
@@ -102,8 +105,10 @@ public class DeliveryService {
 
             if(owner.equals("bw")){
                 delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
+                delivery.getActions().setDateDeliveredToBranch(today);
             }else if(owner.equals("ww")){
                 delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
+                delivery.getActions().setDateDeliveredToWarehouse(today);
             }
 
             DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
