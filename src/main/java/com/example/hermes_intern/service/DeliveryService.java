@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 @Service
@@ -40,8 +41,7 @@ public class DeliveryService {
 
     }
 
-    public Flux<Delivery> getByStatus(String status)
-    {
+    public Flux<Delivery> getByStatus(String status) {
         return this.deliveries.findDeliveriesByStatus(status);
     }
 
@@ -62,10 +62,10 @@ public class DeliveryService {
 
     public Mono<DeliveryLocation> getLocation(@PathVariable("id") String id) {
         return this.deliveries.findById(id).map(response -> {
-           DeliveryLocation deliveryLocation = new DeliveryLocation();
-           deliveryLocation.setId(id);
-           deliveryLocation.setLocation(response.getStatus());
-           return  deliveryLocation;
+            DeliveryLocation deliveryLocation = new DeliveryLocation();
+            deliveryLocation.setId(id);
+            deliveryLocation.setLocation(response.getStatus());
+            return deliveryLocation;
         });
     }
 
@@ -74,11 +74,11 @@ public class DeliveryService {
             DeliveryActions deliveryActions = new DeliveryActions();
             deliveryActions.setId(id);
             deliveryActions.setActions(response.getActions());
-            return  deliveryActions;
+            return deliveryActions;
         });
     }
 
-    public Mono<DeliveryCount> getDeliveryCount(@RequestParam(value = "status", required = false) String status) {
+    public Mono<DeliveryCount> getDeliveryCount(@RequestParam String status) {
         return this.deliveries.countByStatus(status).map(aLong -> {
             DeliveryCount deliveryCount = new DeliveryCount();
             deliveryCount.setDeliveryCount(aLong);
@@ -89,6 +89,53 @@ public class DeliveryService {
 
     public Flux<Delivery> getCourierDeliveries(@PathVariable("courierid") String courierid) {
         return this.deliveries.findByCourierid(courierid);
+    }
+
+    public Long getStartOfToday() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    public Long getStartOfTomarrow() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        return calendar.getTimeInMillis();
+    }
+
+    public Mono<DeliveryCount> getDeliveyCountByStatusToday(@RequestParam String status) {
+
+        Flux<Delivery> result = null;
+
+        if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
+
+            result = this.deliveries.getDeliveryCountByDateCourierRecieved(status, getStartOfToday(), getStartOfTomarrow());
+        } else if (status.equals(DeliveryStatus.IN_BRANCH.toString())) {
+
+            result = this.deliveries.getDeliveryCountByDateDeliveredToBranch(status, getStartOfToday(), getStartOfTomarrow());
+        } else if (status.equals(DeliveryStatus.ON_WAY_WAREHOUSE.toString())) {
+
+            result = this.deliveries.getDeliveryCountByDateLeftBranch(status, getStartOfToday(), getStartOfTomarrow());
+        } else if (status.equals(DeliveryStatus.IN_WAREHOUSE.toString())) {
+
+            result = this.deliveries.getDeliveryCountByDateDeliveredToWarehouse(status, getStartOfToday(), getStartOfTomarrow());
+        }
+
+
+        return result.count().map(aLong -> {
+            DeliveryCount deliveryCount = new DeliveryCount();
+            deliveryCount.setDeliveryCount(aLong);
+            deliveryCount.setStatus(status);
+            return deliveryCount;
+        });
     }
 
     public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner){
