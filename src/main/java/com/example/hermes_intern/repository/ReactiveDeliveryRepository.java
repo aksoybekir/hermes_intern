@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 @Repository
 @N1qlPrimaryIndexed
 @ViewIndexed(designDoc = "delivery", viewName = "all")

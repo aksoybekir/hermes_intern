@@ -2,6 +2,7 @@ package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryActions;
+import com.example.hermes_intern.model.DeliveryCheckIn;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.service.DeliveryService;
@@ -70,6 +71,12 @@ public class DeliveryController {
     @RequestMapping(method = RequestMethod.GET, value = "/today", params = {"courierid", "status"})
     public Flux<Delivery> getCourierDeliveriesToday(@RequestParam String courierid, @RequestParam String status) {
         return this.deliveryService.getCourierDeliveriesToday(courierid, status);
+    }
+   
+      
+    @RequestMapping(method = RequestMethod.GET, value = "/checkin", params = {"id","owner"})
+    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam String id, @RequestParam String owner) {
+        return this.deliveryService.checkInDelivery(id,owner);
     }
 
 
