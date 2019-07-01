@@ -29,10 +29,17 @@ public class DeliveryController {
         return this.deliveryService.create(delivery);
     }
 
+
     @GetMapping("/count")
     public Mono<DeliveryCount> getDeliveryCount(@RequestParam(value = "status", required = false) String status) {
         return deliveryService.getDeliveryCount(status);
     }
 
 
-}
+    //Müşteriler iade id bilgisi gönderip, iadenin son durumunu görüntülerler.
+    @GetMapping("/location/{id}")
+    public Mono<Delivery> getLocation(@PathVariable("id") String id) {
+        return this.deliveryService.getLocation(id);
+    }
+ }
+
