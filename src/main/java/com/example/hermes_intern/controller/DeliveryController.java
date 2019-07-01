@@ -24,10 +24,16 @@ public class DeliveryController {
     }
 
     @GetMapping("")
-    public Flux<Delivery> getAll() {
-        return this.deliveryService.getAll();
+    public Flux<Delivery> getAll(@RequestParam(value = "status", required = false) String status) {
+        if (status!=null)
+        {
+            return this.deliveryService.getByStatus(status);
+        }
+        else
+        {
+            return this.deliveryService.getAll();
+        }
     }
-
     @PostMapping("")
     public Mono<Delivery> create(@RequestBody Delivery delivery) {
         return this.deliveryService.create(delivery);

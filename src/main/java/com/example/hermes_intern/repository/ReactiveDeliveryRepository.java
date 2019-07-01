@@ -14,6 +14,8 @@ import reactor.core.publisher.Mono;
 public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepository<Delivery, String> {
 
     Mono<Long> countByStatus(String status);
+
     Mono<Delivery> findById(String id);
 
+    Flux<Delivery> findDeliveriesByStatus(String status);
 }
