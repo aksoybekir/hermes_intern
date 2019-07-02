@@ -26,9 +26,6 @@ public class UserService {
 
     public Mono<User> create(@RequestBody User user) {
         user.setId(UUID.randomUUID().toString());
-        user.setPassword("pass");
-        user.setUser_role(UserRoles.ADMIN);
-        user.setUsername("user");
         return this.users.save(user);
     }
 
@@ -36,5 +33,10 @@ public class UserService {
     public Flux<User> getAll(){
         return this.users.findAll();
     };
+
+    public Mono<User> getByUsernameAndPassword(String username, String password)
+    {
+        return this.users.getByUsernameAndAndPassword(username,password);
+    }
 
 }

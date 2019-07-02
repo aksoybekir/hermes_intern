@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("")
+    @PostMapping("/register")
     public Mono<User> create(@RequestBody User user) {
         return this.userService.create(user);
     }
@@ -27,4 +27,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public Flux<User> getAll(){ return this.userService.getAll();}
 
+    @PostMapping("/login")
+    public Mono<User> getByUsernameAndPassword(@RequestBody User user)
+    {
+        return this.userService.getByUsernameAndPassword(user.getUsername(),user.getPassword());
+    }
 }
