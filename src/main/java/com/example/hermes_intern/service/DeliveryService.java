@@ -2,10 +2,7 @@ package com.example.hermes_intern.service;
 
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
-import com.example.hermes_intern.model.DeliveryActions;
-import com.example.hermes_intern.model.DeliveryCheckIn;
-import com.example.hermes_intern.model.DeliveryLocation;
-import com.example.hermes_intern.model.DeliveryCount;
+import com.example.hermes_intern.model.*;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
@@ -149,9 +146,9 @@ public class DeliveryService {
     }
 
 
-    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner){
+    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner) {
 
-        return this.deliveries.findById(id).map(response -> {
+        return this.deliveries.findById(id).flatMap(response -> {
             Delivery delivery = new Delivery();
 
             delivery.setId(response.getId());
@@ -161,26 +158,67 @@ public class DeliveryService {
             delivery.setBranch(response.getBranch());
             delivery.setActions(response.getActions());
 
-            if(owner.equals("bw")){
+            if (owner.equals("bw")) {
                 delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
                 delivery.getActions().setDateDeliveredToBranch(today);
-            }else if(owner.equals("ww")){
+
+                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+
+                return this.deliveries.save(delivery).map(delivery1 -> {
+                    deliveryCheckIn.setId(delivery.getId());
+                    deliveryCheckIn.setSuccess(true);
+                    return deliveryCheckIn;
+                });
+
+            } else if (owner.equals("ww")) {
                 delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
                 delivery.getActions().setDateDeliveredToWarehouse(today);
-            }
 
-            DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
-            try {
-                this.deliveries.save(delivery).subscribe();
-                deliveryCheckIn.setId(delivery.getId());
-                deliveryCheckIn.setSuccess(true);
-                return deliveryCheckIn;
-            }catch (Error e){
-                deliveryCheckIn.setId(delivery.getId());
-                deliveryCheckIn.setSuccess(false);
-                return deliveryCheckIn;
-            }
+                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
 
+                return this.deliveries.save(delivery).map(delivery1 -> {
+                    deliveryCheckIn.setId(delivery.getId());
+                    deliveryCheckIn.setSuccess(true);
+                    return deliveryCheckIn;
+                });
+            } else{
+
+                delivery.setStatus(response.getStatus());
+                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+
+                return this.deliveries.save(delivery).map(delivery1 -> {
+                    deliveryCheckIn.setId(delivery.getId());
+                    deliveryCheckIn.setSuccess(false);
+                    return deliveryCheckIn;
+                });
+
+            }
+        });
+    }
+
+    public Mono<DeliveryCheckOut> checkOutDelivery(@RequestParam(value = "id") String id) {
+
+        return this.deliveries.findById(id).flatMap(response -> {
+            Delivery delivery = new Delivery();
+
+            delivery.setId(response.getId());
+            delivery.setWarehouse(response.getWarehouse());
+            delivery.setCustomer(response.getCustomer());
+            delivery.setCourierid(response.getCourierid());
+            delivery.setBranch(response.getBranch());
+            delivery.setActions(response.getActions());
+
+
+                delivery.setStatus(String.valueOf(DeliveryStatus.ON_WAY_WAREHOUSE));
+                delivery.getActions().setDateLeftBranch(today);
+
+                DeliveryCheckOut deliveryCheckOut = new DeliveryCheckOut();
+
+                return this.deliveries.save(delivery).map(delivery1 -> {
+                    deliveryCheckOut.setId(delivery.getId());
+                    deliveryCheckOut.setSuccess(true);
+                    return deliveryCheckOut;
+                });
         });
     }
 }

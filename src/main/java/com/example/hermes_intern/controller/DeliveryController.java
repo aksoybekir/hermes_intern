@@ -1,10 +1,7 @@
 package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.domain.Delivery;
-import com.example.hermes_intern.model.DeliveryActions;
-import com.example.hermes_intern.model.DeliveryCheckIn;
-import com.example.hermes_intern.model.DeliveryLocation;
-import com.example.hermes_intern.model.DeliveryCount;
+import com.example.hermes_intern.model.*;
 import com.example.hermes_intern.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +76,10 @@ public class DeliveryController {
         return this.deliveryService.checkInDelivery(id,owner);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/checkout", params = {"id"})
+    public Mono<DeliveryCheckOut> checkInDelivery(@RequestParam String id) {
+        return this.deliveryService.checkOutDelivery(id);
+    }
 
 }
 
