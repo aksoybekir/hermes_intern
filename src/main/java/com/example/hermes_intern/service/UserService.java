@@ -26,9 +26,6 @@ public class UserService {
 
     public Mono<User> create(@RequestBody User user) {
         user.setId(UUID.randomUUID().toString());
-        user.setPassword("pass");
-        user.setUser_role(UserRoles.ADMIN);
-        user.setUsername("user");
         return this.users.save(user);
     }
 
