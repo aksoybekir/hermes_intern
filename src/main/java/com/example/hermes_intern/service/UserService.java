@@ -37,4 +37,9 @@ public class UserService {
         return this.users.findAll();
     };
 
+    public Mono<User> getByUsernameAndPassword(String username, String password)
+    {
+        return this.users.getByUsernameAndAndPassword(username,password);
+    }
+
 }

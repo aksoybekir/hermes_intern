@@ -27,4 +27,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public Flux<User> getAll(){ return this.userService.getAll();}
 
+    @RequestMapping(method = RequestMethod.GET, params = {"username","password"})
+    public Mono<User> getByUsernameAndPassword(@RequestParam String username, @RequestParam String password)
+    {
+        return this.userService.getByUsernameAndPassword(username,password);
+    }
 }
