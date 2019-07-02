@@ -146,7 +146,7 @@ public class DeliveryService {
     }
 
 
-    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam(value = "id") String id, @RequestParam(value = "owner") String owner) {
+    public Mono<DeliveryCheckIn> checkInDeliveryBranch(@RequestParam(value = "id") String id) {
 
         return this.deliveries.findById(id).flatMap(response -> {
             Delivery delivery = new Delivery();
@@ -158,41 +158,42 @@ public class DeliveryService {
             delivery.setBranch(response.getBranch());
             delivery.setActions(response.getActions());
 
-            if (owner.equals("bw")) {
-                delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
-                delivery.getActions().setDateDeliveredToBranch(today);
+            delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
+            delivery.getActions().setDateDeliveredToBranch(today);
 
-                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+            DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
 
-                return this.deliveries.save(delivery).map(delivery1 -> {
-                    deliveryCheckIn.setId(delivery.getId());
-                    deliveryCheckIn.setSuccess(true);
-                    return deliveryCheckIn;
-                });
+            return this.deliveries.save(delivery).map(delivery1 -> {
+                deliveryCheckIn.setId(delivery.getId());
+                deliveryCheckIn.setSuccess(true);
+                return deliveryCheckIn;
+            });
+        });
+    }
 
-            } else if (owner.equals("ww")) {
-                delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
-                delivery.getActions().setDateDeliveredToWarehouse(today);
+    public Mono<DeliveryCheckIn> checkInDeliveryWarehouse(@RequestParam(value = "id") String id) {
 
-                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+        return this.deliveries.findById(id).flatMap(response -> {
+            Delivery delivery = new Delivery();
 
-                return this.deliveries.save(delivery).map(delivery1 -> {
-                    deliveryCheckIn.setId(delivery.getId());
-                    deliveryCheckIn.setSuccess(true);
-                    return deliveryCheckIn;
-                });
-            } else{
+            delivery.setId(response.getId());
+            delivery.setWarehouse(response.getWarehouse());
+            delivery.setCustomer(response.getCustomer());
+            delivery.setCourierid(response.getCourierid());
+            delivery.setBranch(response.getBranch());
+            delivery.setActions(response.getActions());
 
-                delivery.setStatus(response.getStatus());
-                DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
 
-                return this.deliveries.save(delivery).map(delivery1 -> {
-                    deliveryCheckIn.setId(delivery.getId());
-                    deliveryCheckIn.setSuccess(false);
-                    return deliveryCheckIn;
-                });
+            delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
+            delivery.getActions().setDateDeliveredToWarehouse(today);
 
-            }
+            DeliveryCheckIn deliveryCheckIn = new DeliveryCheckIn();
+
+            return this.deliveries.save(delivery).map(delivery1 -> {
+                deliveryCheckIn.setId(delivery.getId());
+                deliveryCheckIn.setSuccess(true);
+                return deliveryCheckIn;
+            });
         });
     }
 
@@ -209,16 +210,16 @@ public class DeliveryService {
             delivery.setActions(response.getActions());
 
 
-                delivery.setStatus(String.valueOf(DeliveryStatus.ON_WAY_WAREHOUSE));
-                delivery.getActions().setDateLeftBranch(today);
+            delivery.setStatus(String.valueOf(DeliveryStatus.ON_WAY_WAREHOUSE));
+            delivery.getActions().setDateLeftBranch(today);
 
-                DeliveryCheckOut deliveryCheckOut = new DeliveryCheckOut();
+            DeliveryCheckOut deliveryCheckOut = new DeliveryCheckOut();
 
-                return this.deliveries.save(delivery).map(delivery1 -> {
-                    deliveryCheckOut.setId(delivery.getId());
-                    deliveryCheckOut.setSuccess(true);
-                    return deliveryCheckOut;
-                });
+            return this.deliveries.save(delivery).map(delivery1 -> {
+                deliveryCheckOut.setId(delivery.getId());
+                deliveryCheckOut.setSuccess(true);
+                return deliveryCheckOut;
+            });
         });
     }
 }

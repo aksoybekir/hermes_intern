@@ -71,9 +71,14 @@ public class DeliveryController {
     }
    
       
-    @RequestMapping(method = RequestMethod.GET, value = "/checkin", params = {"id","owner"})
-    public Mono<DeliveryCheckIn> checkInDelivery(@RequestParam String id, @RequestParam String owner) {
-        return this.deliveryService.checkInDelivery(id,owner);
+    @RequestMapping(method = RequestMethod.GET, value = "/checkin/branch", params = {"id"})
+    public Mono<DeliveryCheckIn> checkInDeliveryBranch(@RequestParam String id) {
+        return this.deliveryService.checkInDeliveryBranch(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/checkin/warehouse", params = {"id"})
+    public Mono<DeliveryCheckIn> checkInDeliveryWarehouse(@RequestParam String id) {
+        return this.deliveryService.checkInDeliveryWarehouse(id);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/checkout", params = {"id"})
