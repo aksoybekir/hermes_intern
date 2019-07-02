@@ -37,7 +37,20 @@ public class DeliveryService {
 
     }
 
-    public Flux<Delivery> getByStatus(String status) {
+    public Flux<Delivery> getByStatusOnCourier() {
+        String status = "ON_COURIER";
+        return this.deliveries.findDeliveriesByStatus(status);
+    }
+    public Flux<Delivery> getByStatusInBranch() {
+        String status = "IN_BRANCH";
+        return this.deliveries.findDeliveriesByStatus(status);
+    }
+    public Flux<Delivery> getByStatusOnWayWarehouse() {
+        String status = "ON_WAY_WAREHOUSE";
+        return this.deliveries.findDeliveriesByStatus(status);
+    }
+    public Flux<Delivery> getByStatusInWarehouse() {
+        String status = "IN_WAREHOUSE";
         return this.deliveries.findDeliveriesByStatus(status);
     }
 

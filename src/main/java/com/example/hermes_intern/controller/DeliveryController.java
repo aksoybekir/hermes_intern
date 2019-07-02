@@ -24,9 +24,21 @@ public class DeliveryController {
         return this.deliveryService.getAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, params = {"status"})
-    public Flux<Delivery> getByStatus(@RequestParam String status) {
-        return this.deliveryService.getByStatus(status);
+    @GetMapping("/oncourier")
+    public Flux<Delivery> getByStatusOnCourier() {
+        return this.deliveryService.getByStatusOnCourier();
+    }
+    @GetMapping("/inbranch")
+    public Flux<Delivery> getByStatusInBranch() {
+        return this.deliveryService.getByStatusInBranch();
+    }
+    @GetMapping("/onwaywarehouse")
+    public Flux<Delivery> getByStatusOnWayWarehouse() {
+        return this.deliveryService.getByStatusOnWayWarehouse();
+    }
+    @GetMapping("/inwarehouse")
+    public Flux<Delivery> getByStatusInWarehouse() {
+        return this.deliveryService.getByStatusInWarehouse();
     }
 
     @PostMapping("")
