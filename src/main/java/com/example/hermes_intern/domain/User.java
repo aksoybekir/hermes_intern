@@ -14,7 +14,7 @@ public class User {
     private String password;
 
     @Field("role")
-    private UserRoles user_role;
+    private UserRoles role;
 
     public String getId() {
         return id;
@@ -40,11 +40,11 @@ public class User {
         this.password = password;
     }
 
-    public UserRoles getUser_role() {
-        return user_role;
+    public UserRoles getRole() {
+        return role;
     }
 
-    public void setUser_role(UserRoles user_role) {
-        this.user_role = user_role;
+    public void setRole(UserRoles role) {
+        this.role = role;
     }
 }
