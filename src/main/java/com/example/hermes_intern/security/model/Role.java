@@ -1,7 +1,6 @@
-package com.example.hermes_intern.domain;
+package com.example.hermes_intern.security.model;
 
-public enum UserRoles {
-
+public enum Role {
     ADMIN,
     CUSTOMER,
     COURIER,
