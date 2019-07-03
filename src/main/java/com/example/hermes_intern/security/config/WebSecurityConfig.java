@@ -41,6 +41,8 @@ public class WebSecurityConfig {
                     });
                 }).and()
                 .csrf().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
