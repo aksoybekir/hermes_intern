@@ -1,6 +1,6 @@
 package com.example.hermes_intern.repository;
 
-import com.example.hermes_intern.domain.User;
+import com.example.hermes_intern.security.model.User;
 import org.springframework.data.couchbase.core.query.N1qlPrimaryIndexed;
 import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.ReactiveCouchbaseSortingRepository;
@@ -11,7 +11,5 @@ import reactor.core.publisher.Mono;
 @N1qlPrimaryIndexed
 @ViewIndexed(designDoc = "user", viewName = "all")
 public interface ReactiveUserRepository extends ReactiveCouchbaseSortingRepository<User, String> {
-
-    Mono<User> getByUsernameAndAndPassword(String username, String password);
-
+    Mono<User> findByUsername(String username);
 }
