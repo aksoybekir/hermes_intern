@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -47,11 +49,11 @@ public class UserService {
 
     public Mono<Message> create(RegisterRequest registerRequest) {
 
-        Mono<Message> messageMono = this.users.findByUsername(registerRequest.getUsername())
+        return this.users.findByUsername(registerRequest.getUsername())
                 .map(user -> new Message("Username Is Already In Use"))
-                .switchIfEmpty(Mono.just(new Message("User Created")).map(x->
+                .switchIfEmpty(Mono.just(new Message("User Created")).map(x ->
                 {
-                    List<Role> roles = new ArrayList<Role>();
+                    List<Role> roles = new ArrayList<>();
 
                     try {
                         for (String role : registerRequest.getRoles()) {
@@ -71,8 +73,6 @@ public class UserService {
 
                     return x;
                 }));
-
-        return messageMono;
 
     }
 
