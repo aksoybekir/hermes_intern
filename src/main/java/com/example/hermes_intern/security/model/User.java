@@ -2,9 +2,7 @@ package com.example.hermes_intern.security.model;
 
 import com.couchbase.client.deps.com.fasterxml.jackson.annotation.JsonIgnore;
 import com.couchbase.client.java.repository.annotation.Field;
-import com.example.hermes_intern.security.model.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,19 +23,10 @@ public class User implements UserDetails {
     @Field("password")
     private String password;
 
-    @Getter
-    @Setter
     private Boolean enabled;
 
     @Field("role")
     private List<Role> roles;
-
-    public <User> User(String userUsername, String s, boolean b, List<Role> asList) {
-        this.username = userUsername;
-        this.password = s;
-        this.enabled = b;
-        this.roles = asList;
-    }
 
     public String getId() {
         return id;
