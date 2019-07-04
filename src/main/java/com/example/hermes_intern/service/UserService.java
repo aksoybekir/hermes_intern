@@ -50,10 +50,10 @@ public class UserService {
 
 
     public Mono<User> create() {
-        User user = new User("beq");
+        User user = new User("be");
         user.setId(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode("beq"));
-        user.setRoles(Arrays.asList(Role.ADMIN));
+        user.setPassword(passwordEncoder.encode("be"));
+        user.setRoles(Arrays.asList(Role.ROLE_WAREHOUSE_WORKER));
         return this.users.save(user);
     }
 
