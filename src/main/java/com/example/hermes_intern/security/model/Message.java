@@ -2,17 +2,17 @@ package com.example.hermes_intern.security.model;
 
 public class Message {
 
-    private String content;
+    private String message;
 
-    public Message(String content) {
-        this.content = content;
+    public Message(String message) {
+        this.message = message;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

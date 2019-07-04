@@ -1,18 +1,13 @@
 package com.example.hermes_intern.controller;
 
-import com.example.hermes_intern.security.model.User;
-import com.example.hermes_intern.security.model.AuthRequest;
-import com.example.hermes_intern.security.model.AuthResponse;
+import com.example.hermes_intern.security.model.*;
 import com.example.hermes_intern.security.JWTUtil;
 import com.example.hermes_intern.security.PBKDF2Encoder;
 import com.example.hermes_intern.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -44,8 +39,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Mono<User> create() {
-        return this.userService.create();
+    public Mono<Message> create(@RequestBody RegisterRequest registerRequest) {
+        System.out.println("asdwqeqwesda");
+        return this.userService.create(registerRequest);
     }
 
 }
