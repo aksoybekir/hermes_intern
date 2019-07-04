@@ -1,12 +1,18 @@
 package com.example.hermes_intern.service;
 
+import com.example.hermes_intern.security.JWTUtil;
 import com.example.hermes_intern.security.PBKDF2Encoder;
+import com.example.hermes_intern.security.model.AuthRequest;
+import com.example.hermes_intern.security.model.AuthResponse;
 import com.example.hermes_intern.security.model.Role;
 import com.example.hermes_intern.security.model.User;
 import com.example.hermes_intern.repository.ReactiveUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -28,23 +34,18 @@ public class UserService {
         this.users= users;
     }
 
+    @Autowired
+    private JWTUtil jwtUtil;
 
-    //username:passwowrd -> user:user
-    private final String userUsername = "user";// password: user
-    private final User user = new User(userUsername, "cBrlgyL2GI2GINuLUUwgojITuIufFycpLG4490dhGtY=", true, Arrays.asList(Role.CUSTOMER));
 
-    //username:passwowrd -> admin:admin
-    private final String adminUsername = "admin";// password: admin
-    private final User admin = new User(adminUsername, "dQNjUIMorJb8Ubj2+wVGYp6eAeYkdekqAcnYp+aRq5w=", true, Arrays.asList(Role.ADMIN));
-
-    public Mono<User> findByUsername(String username) {
-        if (username.equals(userUsername)) {
-            return Mono.just(user);
-        } else if (username.equals(adminUsername)) {
-            return Mono.just(admin);
-        } else {
-            return Mono.empty();
-        }
+    public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
+        return this.users.findByUsername(ar.getUsername()).map((userDetails) -> {
+            if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
+                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
 

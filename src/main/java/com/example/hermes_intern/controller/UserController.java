@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 
 @RestController
-@RequestMapping(value = "")
+@RequestMapping(value = "/users")
 public class UserController {
 
     private final UserService userService;
@@ -38,26 +38,14 @@ public class UserController {
     private UserService userRepository;
 
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
-        return userRepository.findByUsername(ar.getUsername()).map((userDetails) -> {
-            if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
-                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        return this.userService.login(ar);
     }
-
-
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Mono<User> create() {
         return this.userService.create();
     }
-
-    @RequestMapping(value = "/all",method = RequestMethod.GET)
-    public Flux<User> getAll(){ return this.userService.getAll();}
 
 }
