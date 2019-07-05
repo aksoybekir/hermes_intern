@@ -40,7 +40,6 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Mono<Message> create(@RequestBody RegisterRequest registerRequest) {
-        System.out.println("asdwqeqwesda");
         return this.userService.create(registerRequest);
     }
 
