@@ -1,5 +1,6 @@
 package com.example.hermes_intern.controller;
 
+import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.*;
 import com.example.hermes_intern.service.DeliveryService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.swing.*;
 import java.security.Principal;
 
 @RestController
@@ -35,13 +37,13 @@ public class DeliveryController {
         return this.deliveryService.getAll();
     }
 
-    @GetMapping("/courier/mydeliveries")   //TODO Kuryeler için mydeliveries endpointi açılacak
+    @GetMapping("/courier/mydeliveries")
     @PreAuthorize("hasRole('COURIER')")
-    public Flux<Object> getCourierMyDeliveries(Principal principal) {
+    public Flux<Delivery> getCourierMyDeliveries(Principal principal) {
         return this.deliveryService.getCourierMyDeliveries(principal);
     }
 
-    @GetMapping("/oncourier")   //TODO Kuryeler için mydeliveries endpointi açılacak
+    @GetMapping("/oncourier")
     @PreAuthorize("hasRole('BRANCH_WORKER') or hasRole('ADMIN')")
     public Flux<Delivery> getByStatusOnCourier() {
         return this.deliveryService.getByStatusOnCourier();
@@ -79,29 +81,41 @@ public class DeliveryController {
     }
 
 
-    @GetMapping("/location/{id}")   //TODO Sadece kendine ait gönderileri görebileceği şekilde düzenlenecek.
+    @GetMapping("/location/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public Mono<DeliveryLocation> getLocation(@PathVariable("id") String id) {
         return this.deliveryService.getLocation(id);
     }
 
-    @GetMapping("/actions/{id}")    //TODO Şu an sadece kendine ait gönderileri görebilecek şekilde düzenlenmiş.
+    @GetMapping("customer/location/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public Mono<ResponseEntity<?>> getLocationbyCustomer(@PathVariable("id") String id, Principal principal) {
+        return this.deliveryService.getLocationbyCustomer(id, principal);
+    }
+
+    @GetMapping("customer/actions/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public Mono<ResponseEntity<?>> getActions(@PathVariable("id") String id, Principal principal) {
-        return this.deliveryService.getActions(id,principal);
+        return this.deliveryService.getActionsbyCustomer(id,principal);
     }
 
-    @RequestMapping(value = "/courier", method = RequestMethod.GET)     //TODO Kurye kendisine ait tüm zamanlardaki gönderileri görebilecek. Endpoint ismi düzenlenmeli
-    @PreAuthorize("hasRole('COURIER')")
-    public Flux<Delivery> getCourierDeliveries(Principal principal) {
-        String courierid = principal.getName();
-        return this.deliveryService.getCourierDeliveries(courierid);
+    @GetMapping("/actions/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Mono<Actions> getActions(@PathVariable("id") String id) {
+        return this.deliveryService.getActions(id);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/today", params = {"courierid", "status"}) //TODO Kurye o günki gönderilerini görebilecek
-    @PreAuthorize("hasRole('COURIER')")
+
+    @RequestMapping(method = RequestMethod.GET, value = "/today", params = {"courierid", "status"})
+    @PreAuthorize("hasRole('ADMIN') or hasRole('BRANCH_WORKER')")
     public Flux<Delivery> getCourierDeliveriesToday(@RequestParam String courierid, @RequestParam String status) {
         return this.deliveryService.getCourierDeliveriesToday(courierid, status);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/courier/today")
+    @PreAuthorize("hasRole('COURIER')")
+    public Flux<Delivery> getCourierMyDeliveriesToday(Principal principal) {
+        return this.deliveryService.getCourierMyDeliveriesToday(principal);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/checkin/branch", params = {"id"})

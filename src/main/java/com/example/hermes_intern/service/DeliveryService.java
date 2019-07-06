@@ -1,6 +1,7 @@
 package com.example.hermes_intern.service;
 
 import com.example.hermes_intern.controller.ResourceREST;
+import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
 import com.example.hermes_intern.model.*;
@@ -46,19 +47,8 @@ public class DeliveryService {
 
     }
 
-    public Flux<Object> getCourierMyDeliveries(Principal principal) {
-        return this.deliveries.findByCourierid(principal.getName()).map(response -> {
-            return ResponseEntity.ok().body(response);
-        });
-        /*System.out.println(id);
-        System.out.println(principal.getName());
-        return this.deliveries.findByIdAndCustomer_Id(id, principal.getName()).map(
-                response -> {
-                    DeliveryActions deliveryActions = new DeliveryActions();
-                    deliveryActions.setId(id);
-                    deliveryActions.setActions(response.getActions());
-                    return deliveryActions;
-                });*/
+    public Flux<Delivery> getCourierMyDeliveries(Principal principal) {
+        return this.deliveries.findByCourierid(principal.getName());
     }
 
     public Flux<Delivery> getByStatusOnCourier() {
@@ -105,25 +95,28 @@ public class DeliveryService {
         });
     }
 
-    public Mono<ResponseEntity<?>> getActions(@PathVariable("id") String id, Principal principal) {
+    public Mono<ResponseEntity<?>> getLocationbyCustomer(@PathVariable("id") String id, Principal principal) {
         return this.deliveries.findById(id).map(response -> {
             if (principal.getName().equals(response.getCustomer().getId())){
-                DeliveryActions deliveryActions = new DeliveryActions();
-                deliveryActions.setId(id);
-                deliveryActions.setActions(response.getActions());
-                return ResponseEntity.ok().body(deliveryActions);
+                return ResponseEntity.ok().body(response.getStatus());
+            }else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    public Mono<Actions> getActions(@PathVariable("id") String id) {
+        return this.deliveries.findById(id).map(response -> {
+            return response.getActions();
+        });
+    }
+
+    public Mono<ResponseEntity<?>> getActionsbyCustomer(@PathVariable("id") String id, Principal principal) {
+        return this.deliveries.findById(id).map(response -> {
+            if (principal.getName().equals(response.getCustomer().getId())){
+                return ResponseEntity.ok().body(response.getActions());
             }else
                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-        /*System.out.println(id);
-        System.out.println(principal.getName());
-        return this.deliveries.findByIdAndCustomer_Id(id, principal.getName()).map(
-                response -> {
-                    DeliveryActions deliveryActions = new DeliveryActions();
-                    deliveryActions.setId(id);
-                    deliveryActions.setActions(response.getActions());
-                    return deliveryActions;
-                });*/
     }
 
     public Mono<DeliveryCount> getDeliveryCount(@RequestParam String status) {
@@ -133,10 +126,6 @@ public class DeliveryService {
             deliveryCount.setStatus(status);
             return deliveryCount;
         });
-    }
-
-    public Flux<Delivery> getCourierDeliveries(String courierid) {
-        return this.deliveries.findByCourierid(courierid);
     }
 
     public Long getStartOfToday() {
@@ -195,6 +184,10 @@ public class DeliveryService {
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranchAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
         }
         return deliveries;
+    }
+
+    public Flux<Delivery> getCourierMyDeliveriesToday(Principal principal) {
+            return this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId("IN_BRANCH", principal.getName(), getStartOfToday(), getStartOfTomarrow());
     }
 
 
