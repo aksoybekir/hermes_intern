@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
@@ -34,6 +35,7 @@ public class UserService {
 
     @Autowired
     private JWTUtil jwtUtil;
+
 
 
     public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
@@ -67,7 +69,7 @@ public class UserService {
                     User user = new User();
                     user.setUsername(registerRequest.getUsername());
                     user.setId(UUID.randomUUID().toString());
-                    user.setPassword(registerRequest.getPassword());
+                    user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
                     user.setRoles(roles);
                     this.users.save(user).subscribe();
 

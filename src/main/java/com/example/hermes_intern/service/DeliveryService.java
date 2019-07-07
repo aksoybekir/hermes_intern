@@ -1,11 +1,17 @@
 package com.example.hermes_intern.service;
 
+import com.example.hermes_intern.controller.ResourceREST;
+import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
 import com.example.hermes_intern.model.*;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
+import com.example.hermes_intern.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,25 +37,35 @@ public class DeliveryService {
         this.deliveries = deliveries;
     }
 
+    @Autowired
+    private JWTUtil jwtUtil;
+
+
     @View
     public Flux<Delivery> getAll() {
-
         return this.deliveries.findAll();
 
+    }
+
+    public Flux<Delivery> getCourierMyDeliveries(Principal principal) {
+        return this.deliveries.findByCourierid(principal.getName());
     }
 
     public Flux<Delivery> getByStatusOnCourier() {
         String status = "ON_COURIER";
         return this.deliveries.findDeliveriesByStatus(status);
     }
+
     public Flux<Delivery> getByStatusInBranch() {
         String status = "IN_BRANCH";
         return this.deliveries.findDeliveriesByStatus(status);
     }
+
     public Flux<Delivery> getByStatusOnWayWarehouse() {
         String status = "ON_WAY_WAREHOUSE";
         return this.deliveries.findDeliveriesByStatus(status);
     }
+
     public Flux<Delivery> getByStatusInWarehouse() {
         String status = "IN_WAREHOUSE";
         return this.deliveries.findDeliveriesByStatus(status);
@@ -78,13 +95,28 @@ public class DeliveryService {
         });
     }
 
-    public Mono<DeliveryActions> getActions(@PathVariable("id") String id) {
+    public Mono<ResponseEntity<?>> getLocationbyCustomer(@PathVariable("id") String id, Principal principal) {
         return this.deliveries.findById(id).map(response -> {
-            DeliveryActions deliveryActions = new DeliveryActions();
-            deliveryActions.setId(id);
-            deliveryActions.setActions(response.getActions());
-            return deliveryActions;
+            if (principal.getName().equals(response.getCustomer().getId())){
+                return ResponseEntity.ok().body(response.getStatus());
+            }else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    public Mono<Actions> getActions(@PathVariable("id") String id) {
+        return this.deliveries.findById(id).map(response -> {
+            return response.getActions();
         });
+    }
+
+    public Mono<ResponseEntity<?>> getActionsbyCustomer(@PathVariable("id") String id, Principal principal) {
+        return this.deliveries.findById(id).map(response -> {
+            if (principal.getName().equals(response.getCustomer().getId())){
+                return ResponseEntity.ok().body(response.getActions());
+            }else
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     public Mono<DeliveryCount> getDeliveryCount(@RequestParam String status) {
@@ -94,10 +126,6 @@ public class DeliveryService {
             deliveryCount.setStatus(status);
             return deliveryCount;
         });
-    }
-
-    public Flux<Delivery> getCourierDeliveries(@PathVariable("courierid") String courierid) {
-        return this.deliveries.findByCourierid(courierid);
     }
 
     public Long getStartOfToday() {
@@ -156,6 +184,10 @@ public class DeliveryService {
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranchAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
         }
         return deliveries;
+    }
+
+    public Flux<Delivery> getCourierMyDeliveriesToday(Principal principal) {
+            return this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId("IN_BRANCH", principal.getName(), getStartOfToday(), getStartOfTomarrow());
     }
 
 

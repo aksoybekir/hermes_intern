@@ -26,4 +26,12 @@ public class Customer {
     public void setId(String id) {
         this.id = id;
     }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

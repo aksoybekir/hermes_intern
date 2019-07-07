@@ -29,6 +29,12 @@ public class User implements UserDetails {
     @Field("role")
     private List<Role> roles;
 
+    @Field("customerid")
+    private  String customerid;
+
+    @Field("courierid")
+    private  String courierid;
+
     public User() {
     }
 
@@ -104,5 +110,21 @@ public class User implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getCustomerid() {
+        return customerid;
+    }
+
+    public void setCustomerid(String customerid) {
+        this.customerid = customerid;
+    }
+
+    public String getCourierid() {
+        return courierid;
+    }
+
+    public void setCourierid(String courierid) {
+        this.courierid = courierid;
     }
 }
