@@ -41,4 +41,8 @@ public class Actions {
     public void setDateDeliveredToWarehouse(Date dateDeliveredToWarehouse) {
         this.dateDeliveredToWarehouse = dateDeliveredToWarehouse;
     }
+
+    public Date getDateCourierRecieved() {
+        return dateCourierRecieved;
+    }
 }

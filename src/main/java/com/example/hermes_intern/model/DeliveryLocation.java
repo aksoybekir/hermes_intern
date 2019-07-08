@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;
 
-@Data
 @ToString
 @Builder
 @NoArgsConstructor
