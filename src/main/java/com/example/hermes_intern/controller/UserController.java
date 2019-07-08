@@ -34,7 +34,7 @@ public class UserController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
+    public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
         return this.userService.login(ar);
     }
 
