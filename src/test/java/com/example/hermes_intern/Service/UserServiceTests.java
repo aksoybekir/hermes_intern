@@ -1,4 +1,4 @@
-package com.example.hermes_intern;
+package com.example.hermes_intern.Service;
 
 import com.example.hermes_intern.repository.ReactiveUserRepository;
 import com.example.hermes_intern.security.JWTUtil;

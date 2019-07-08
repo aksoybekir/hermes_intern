@@ -48,6 +48,11 @@ public class UserService {
 
     public Mono<Message> create(RegisterRequest registerRequest) {
 
+        if (registerRequest.getPassword().isBlank())
+        {
+            return Mono.just(new Message("Password Cannot Be Empty"));
+        }
+
         return this.reactiveUserRepository.findByUsername(registerRequest.getUsername())
                 .map(user -> new Message("Username Is Already In Use"))
                 .switchIfEmpty(Mono.just(new Message("User Created")).map(x ->
