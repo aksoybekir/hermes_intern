@@ -31,15 +31,13 @@ public class DeliveryService {
     private final ReactiveDeliveryRepository deliveries;
     Date today = Calendar.getInstance().getTime();
 
-
-    @Autowired
-    public DeliveryService(ReactiveDeliveryRepository deliveries) {
-        this.deliveries = deliveries;
-    }
-
-    @Autowired
     private JWTUtil jwtUtil;
 
+    @Autowired
+    public DeliveryService(ReactiveDeliveryRepository deliveries, JWTUtil jwtUtil) {
+        this.deliveries = deliveries;
+        this.jwtUtil = jwtUtil;
+    }
 
     @View
     public Flux<Delivery> getAll() {
@@ -97,9 +95,9 @@ public class DeliveryService {
 
     public Mono<ResponseEntity<?>> getLocationbyCustomer(@PathVariable("id") String id, Principal principal) {
         return this.deliveries.findById(id).map(response -> {
-            if (principal.getName().equals(response.getCustomer().getId())){
+            if (principal.getName().equals(response.getCustomer().getId())) {
                 return ResponseEntity.ok().body(response.getStatus());
-            }else
+            } else
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -112,10 +110,10 @@ public class DeliveryService {
 
     public Mono<ResponseEntity<?>> getActionsbyCustomer(@PathVariable("id") String id, Principal principal) {
         return this.deliveries.findById(id).map(response -> {
-            if (principal.getName().equals(response.getCustomer().getId())){
+            if (principal.getName().equals(response.getCustomer().getId())) {
                 return ResponseEntity.ok().body(response.getActions());
-            }else
-               return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            } else
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }).defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
@@ -187,7 +185,7 @@ public class DeliveryService {
     }
 
     public Flux<Delivery> getCourierMyDeliveriesToday(Principal principal) {
-            return this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId("IN_BRANCH", principal.getName(), getStartOfToday(), getStartOfTomarrow());
+        return this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId("IN_BRANCH", principal.getName(), getStartOfToday(), getStartOfTomarrow());
     }
 
 

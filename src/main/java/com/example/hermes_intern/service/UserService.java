@@ -25,18 +25,16 @@ public class UserService {
 
     private final ReactiveUserRepository users;
 
-    @Autowired
     private PBKDF2Encoder passwordEncoder;
 
-    @Autowired
-    public UserService(ReactiveUserRepository users) {
-        this.users = users;
-    }
-
-    @Autowired
     private JWTUtil jwtUtil;
 
-
+    @Autowired
+    public UserService(ReactiveUserRepository users, PBKDF2Encoder passwordEncoder, JWTUtil jwtUtil) {
+        this.users = users;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
 
     public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
         return this.users.findByUsername(ar.getUsername()).map((userDetails) -> {
