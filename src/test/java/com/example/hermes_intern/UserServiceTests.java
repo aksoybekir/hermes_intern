@@ -3,9 +3,7 @@ package com.example.hermes_intern;
 import com.example.hermes_intern.repository.ReactiveUserRepository;
 import com.example.hermes_intern.security.JWTUtil;
 import com.example.hermes_intern.security.PBKDF2Encoder;
-import com.example.hermes_intern.security.model.AuthRequest;
-import com.example.hermes_intern.security.model.AuthResponse;
-import com.example.hermes_intern.security.model.User;
+import com.example.hermes_intern.security.model.*;
 import com.example.hermes_intern.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +22,13 @@ import javax.validation.constraints.Null;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -47,8 +48,6 @@ public class UserServiceTests {
 
     private UserService userService;
 
-    private User ahmetUser;
-
     @Before
     public void setup() {
 
@@ -59,7 +58,7 @@ public class UserServiceTests {
     @Test
     public void usersShouldLoginTest() {
 
-        ahmetUser = new User();
+        User ahmetUser = new User();
         ahmetUser.setUsername("ahmet");
         ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
 
@@ -84,7 +83,7 @@ public class UserServiceTests {
     @Test
     public void wrongCredentialsShouldGetUnauthorizedErrorTest() {
 
-        ahmetUser = new User();
+        User ahmetUser = new User();
         ahmetUser.setUsername("ahmet");
         ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
 
@@ -109,7 +108,7 @@ public class UserServiceTests {
     @Test
     public void nonRegisteredUserNamesShouldGetUnauthorizedErrorTest() {
 
-        ahmetUser = new User();
+        User ahmetUser = new User();
         ahmetUser.setUsername("ahmet");
         ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
 
@@ -131,5 +130,55 @@ public class UserServiceTests {
                 .verifyComplete();
     }
 
+    @Test
+    public void shouldSuccessfullyCreateUserIfNotExistsTest()
+    {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("ahmet");
+        registerRequest.setPassword("1");
+        List<String> roles =  new ArrayList<>();
+        roles.add("ROLE_CUSTOMER");
+        registerRequest.setRoles(roles);
 
+        User ahmetUser = new User();
+        ahmetUser.setUsername("ahmet");
+        ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
+
+        when(reactiveUserRepository.findByUsername(registerRequest.getUsername())).thenReturn(Mono.empty());
+        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
+        when(reactiveUserRepository.save(any(User.class))).thenReturn(Mono.empty());
+
+
+        StepVerifier.create(userService.create(registerRequest))
+                .consumeNextWith(expectedResult ->{
+                    assertThat(expectedResult).isNotNull();
+                    assertThat(expectedResult.getMessage()).isEqualTo("User Created");
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    public void ShouldReturnErrorMessageIfUserNameExistsTest()
+    {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("ahmet");
+        registerRequest.setPassword("1");
+        List<String> roles =  new ArrayList<>();
+        roles.add("ROLE_CUSTOMER");
+        registerRequest.setRoles(roles);
+
+        User ahmetUser = new User();
+        ahmetUser.setUsername("ahmet");
+        ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
+
+        when(reactiveUserRepository.findByUsername(registerRequest.getUsername())).thenReturn(Mono.just(ahmetUser));
+        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
+
+        StepVerifier.create(userService.create(registerRequest))
+                .consumeNextWith(expectedResult ->{
+                    assertThat(expectedResult).isNotNull();
+                    assertThat(expectedResult.getMessage()).isEqualTo("Username Is Already In Use");
+                })
+                .verifyComplete();
+    }
 }
