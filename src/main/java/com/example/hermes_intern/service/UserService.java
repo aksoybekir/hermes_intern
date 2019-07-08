@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
@@ -23,21 +22,21 @@ public class UserService {
 
     // this is just an example, you can load the user from the database from the repository
 
-    private final ReactiveUserRepository users;
+    private final ReactiveUserRepository reactiveUserRepository;
 
     private PBKDF2Encoder passwordEncoder;
 
     private JWTUtil jwtUtil;
 
     @Autowired
-    public UserService(ReactiveUserRepository users, PBKDF2Encoder passwordEncoder, JWTUtil jwtUtil) {
-        this.users = users;
+    public UserService(ReactiveUserRepository reactiveUserRepository, PBKDF2Encoder passwordEncoder, JWTUtil jwtUtil) {
+        this.reactiveUserRepository = reactiveUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
     public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
-        return this.users.findByUsername(ar.getUsername()).map((userDetails) -> {
+        return this.reactiveUserRepository.findByUsername(ar.getUsername()).map((userDetails) -> {
             if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
                 return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
             } else {
@@ -49,7 +48,7 @@ public class UserService {
 
     public Mono<Message> create(RegisterRequest registerRequest) {
 
-        return this.users.findByUsername(registerRequest.getUsername())
+        return this.reactiveUserRepository.findByUsername(registerRequest.getUsername())
                 .map(user -> new Message("Username Is Already In Use"))
                 .switchIfEmpty(Mono.just(new Message("User Created")).map(x ->
                 {
@@ -69,7 +68,7 @@ public class UserService {
                     user.setId(UUID.randomUUID().toString());
                     user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
                     user.setRoles(roles);
-                    this.users.save(user).subscribe();
+                    this.reactiveUserRepository.save(user).subscribe();
 
                     return x;
                 }));
@@ -78,7 +77,7 @@ public class UserService {
 
     @View
     public Flux<User> getAll() {
-        return this.users.findAll();
+        return this.reactiveUserRepository.findAll();
     }
 
 }
