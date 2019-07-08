@@ -42,7 +42,6 @@ public class DeliveryService {
     @View
     public Flux<Delivery> getAll() {
         return this.deliveries.findAll();
-
     }
 
     public Flux<Delivery> getCourierMyDeliveries(Principal principal) {
