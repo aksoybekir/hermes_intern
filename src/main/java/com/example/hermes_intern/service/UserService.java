@@ -35,14 +35,14 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
+    public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
         return this.reactiveUserRepository.findByUsername(ar.getUsername()).map((userDetails) -> {
             if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
                 return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(""));
             }
-        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("")));
     }
 
 
