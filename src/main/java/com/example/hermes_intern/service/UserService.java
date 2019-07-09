@@ -20,7 +20,6 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    // this is just an example, you can load the user from the database from the repository
 
     private final ReactiveUserRepository reactiveUserRepository;
 
