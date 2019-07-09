@@ -2,14 +2,11 @@ package com.example.hermes_intern.integration;
 
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryCheckOut;
-import com.example.hermes_intern.model.DeliveryLocation;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -45,6 +42,18 @@ public class DeliveryServiceIntegration {
                     response.getResponseBody().equals("ON_WAY_WAREHOUSE");
         });
     }
+    @Test
+    @WithMockUser(roles = "CUSTOMER", username = "87e66464d-80e5-479d-c29-dff6")
+    public void getlocationbyunauthedcustomer() throws Exception {
+
+        this.webClient.get()
+                .uri("/deliveries/customer/location/b2c24658-37d4-4d77-9cfc-cea77da59323")
+                .exchange()
+                .expectStatus()
+                .isNotFound()
+                .expectBody();
+    }
+
 
     @Test
     @WithMockUser(roles = "BRANCH_WORKER")
@@ -58,5 +67,35 @@ public class DeliveryServiceIntegration {
                 .expectStatus()
                 .isOk()
                 .expectBodyList(DeliveryCheckOut.class);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void getCourirerDeliveriesTodayTest() throws Exception {
+        this.webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/deliveries/today")
+                        .queryParam("courierid","a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
+                        .queryParam("status","ON_COURIER")
+                        .build())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Delivery.class);
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void getCourirerDeliveriesTodayUnexpectedStatusTest() throws Exception {
+        this.webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/deliveries/today")
+                        .queryParam("courierid","a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
+                        .queryParam("status","ON_WAY_WAREHOUSE")
+                        .build())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Delivery.class);
     }
 }
