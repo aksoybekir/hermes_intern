@@ -1,4 +1,4 @@
-package com.example.hermes_intern.Service;
+package com.example.hermes_intern.unit;
 
 import com.example.hermes_intern.repository.ReactiveUserRepository;
 import com.example.hermes_intern.security.JWTUtil;
@@ -7,21 +7,14 @@ import com.example.hermes_intern.security.model.*;
 import com.example.hermes_intern.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import javax.validation.constraints.Null;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 
@@ -131,12 +123,11 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldSuccessfullyCreateUserIfNotExistsTest()
-    {
+    public void shouldSuccessfullyCreateUserIfNotExistsTest() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("ahmet");
         registerRequest.setPassword("1");
-        List<String> roles =  new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         roles.add("ROLE_CUSTOMER");
         registerRequest.setRoles(roles);
 
@@ -150,7 +141,7 @@ public class UserServiceTests {
 
 
         StepVerifier.create(userService.create(registerRequest))
-                .consumeNextWith(expectedResult ->{
+                .consumeNextWith(expectedResult -> {
                     assertThat(expectedResult).isNotNull();
                     assertThat(expectedResult.getMessage()).isEqualTo("User Created");
                 })
@@ -158,12 +149,11 @@ public class UserServiceTests {
     }
 
     @Test
-    public void ShouldReturnErrorMessageIfUserNameExistsTest()
-    {
+    public void ShouldReturnErrorMessageIfUserNameExistsTest() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("ahmet");
         registerRequest.setPassword("1");
-        List<String> roles =  new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         roles.add("ROLE_CUSTOMER");
         registerRequest.setRoles(roles);
 
@@ -175,7 +165,7 @@ public class UserServiceTests {
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
 
         StepVerifier.create(userService.create(registerRequest))
-                .consumeNextWith(expectedResult ->{
+                .consumeNextWith(expectedResult -> {
                     assertThat(expectedResult).isNotNull();
                     assertThat(expectedResult.getMessage()).isEqualTo("Username Is Already In Use");
                 })
