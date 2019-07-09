@@ -177,8 +177,9 @@ public class DeliveryService {
         if (status.equals(DeliveryStatus.ON_COURIER.toString())) {
             deliveries = this.deliveries.getDeliveryCountByDateCourierRecievedAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
         } else if (status.equals(DeliveryStatus.IN_BRANCH.toString())) {
-
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToBranchAndCourierId(status, courierid, getStartOfToday(), getStartOfTomarrow());
+        } else {
+            return Flux.empty();
         }
         return deliveries;
     }
