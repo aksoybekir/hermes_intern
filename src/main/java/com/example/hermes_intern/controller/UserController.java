@@ -7,6 +7,7 @@ import com.example.hermes_intern.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,19 +20,9 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService ) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    @Autowired
-    private JWTUtil jwtUtil;
-
-    @Autowired
-    private PBKDF2Encoder passwordEncoder;
-
-    @Autowired
-    private UserService userRepository;
-
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest ar) {
@@ -39,6 +30,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     public Mono<Message> create(@RequestBody RegisterRequest registerRequest) {
         return this.userService.create(registerRequest);
     }

@@ -1,4 +1,4 @@
-package com.example.hermes_intern.Service;
+package com.example.hermes_intern.unit;
 
 import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Customer;
@@ -6,8 +6,6 @@ import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryCount;
 import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.domain.DeliveryStatus;
-import com.example.hermes_intern.model.DeliveryCheckIn;
-import com.example.hermes_intern.model.DeliveryCheckOut;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
 import com.example.hermes_intern.security.JWTUtil;
 import com.example.hermes_intern.service.DeliveryService;
@@ -16,14 +14,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.description;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
