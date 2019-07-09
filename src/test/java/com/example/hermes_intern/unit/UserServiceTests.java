@@ -123,12 +123,11 @@ public class UserServiceTests {
     }
 
     @Test
-    public void shouldSuccessfullyCreateUserIfNotExistsTest()
-    {
+    public void shouldSuccessfullyCreateUserIfNotExistsTest() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("ahmet");
         registerRequest.setPassword("1");
-        List<String> roles =  new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         roles.add("ROLE_CUSTOMER");
         registerRequest.setRoles(roles);
 
@@ -142,7 +141,7 @@ public class UserServiceTests {
 
 
         StepVerifier.create(userService.create(registerRequest))
-                .consumeNextWith(expectedResult ->{
+                .consumeNextWith(expectedResult -> {
                     assertThat(expectedResult).isNotNull();
                     assertThat(expectedResult.getMessage()).isEqualTo("User Created");
                 })
@@ -150,12 +149,11 @@ public class UserServiceTests {
     }
 
     @Test
-    public void ShouldReturnErrorMessageIfUserNameExistsTest()
-    {
+    public void ShouldReturnErrorMessageIfUserNameExistsTest() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("ahmet");
         registerRequest.setPassword("1");
-        List<String> roles =  new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         roles.add("ROLE_CUSTOMER");
         registerRequest.setRoles(roles);
 
@@ -167,7 +165,7 @@ public class UserServiceTests {
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
 
         StepVerifier.create(userService.create(registerRequest))
-                .consumeNextWith(expectedResult ->{
+                .consumeNextWith(expectedResult -> {
                     assertThat(expectedResult).isNotNull();
                     assertThat(expectedResult.getMessage()).isEqualTo("Username Is Already In Use");
                 })

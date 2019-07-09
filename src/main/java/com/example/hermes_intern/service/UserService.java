@@ -46,7 +46,6 @@ public class UserService {
 
 
     public Mono<Message> create(RegisterRequest registerRequest) {
-
         if (registerRequest.getPassword().isBlank())
         {
             return Mono.just(new Message("Password Cannot Be Empty"));
