@@ -1,4 +1,4 @@
-package com.example.hermes_intern.unit;
+package com.example.hermes_intern.service;
 
 import com.example.hermes_intern.repository.ReactiveUserRepository;
 import com.example.hermes_intern.security.JWTUtil;
@@ -40,7 +40,7 @@ public class UserServiceTests {
     private UserService userService;
 
     @Before
-    public void setup() {
+    public void setUp() {
 
         userService = new UserService(reactiveUserRepository, passwordEncoder, jwtUtil);
 

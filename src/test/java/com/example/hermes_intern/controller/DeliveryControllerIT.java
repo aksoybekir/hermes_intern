@@ -1,4 +1,4 @@
-package com.example.hermes_intern.integration;
+package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryCheckOut;
@@ -15,7 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @RunWith(SpringRunner.class)
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DeliveryControllerTest {
+public class DeliveryControllerIT {
 
     @Autowired
     private WebTestClient webClient;

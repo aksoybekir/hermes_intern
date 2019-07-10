@@ -1,4 +1,4 @@
-package com.example.hermes_intern.integration;
+package com.example.hermes_intern.controller;
 
 import com.example.hermes_intern.controller.UserController;
 import com.example.hermes_intern.repository.ReactiveUserRepository;
@@ -24,7 +24,7 @@ import java.util.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "storage.bucket=HermesTest")
 @AutoConfigureWebTestClient
-public class UserControllerTest {
+public class UserControllerIT {
 
     @Autowired
     private ReactiveUserRepository reactiveUserRepository;
@@ -38,7 +38,7 @@ public class UserControllerTest {
     User ahmetUser;
 
     @Before
-    public void setup() {
+    public void setUp() {
 
         ahmetUser = new User();
         ahmetUser.setUsername("Ahmet");
@@ -54,7 +54,7 @@ public class UserControllerTest {
     }
 
     @After
-    public void cleanUp() {
+    public void tearDown() {
         reactiveUserRepository.deleteAll().subscribe();
     }
 

@@ -1,4 +1,4 @@
-package com.example.hermes_intern.unit;
+package com.example.hermes_intern.service;
 
 import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Customer;
@@ -45,7 +45,7 @@ public class DeliveryServiceTest {
 
 
     @Before
-    public void setup() {
+    public void setUp() {
         deliveryService = new DeliveryService(reactiveDeliveryRepository, jwtUtil);
     }
 
