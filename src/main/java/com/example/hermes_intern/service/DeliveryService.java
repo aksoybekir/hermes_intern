@@ -162,6 +162,10 @@ public class DeliveryService {
 
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToWarehouse(status, getStartOfToday(), getStartOfTomarrow());
         }
+        else
+        {
+            return Mono.empty();
+        }
 
 
         return deliveries.count().map(aLong -> {
