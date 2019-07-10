@@ -13,10 +13,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import reactor.core.publisher.Mono;
 
-/**
- *
- * @author ard333
- */
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class WebSecurityConfig {

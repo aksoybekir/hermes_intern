@@ -95,7 +95,7 @@ public class DeliveryController {
     @GetMapping("customer/actions/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public Mono<ResponseEntity<?>> getActions(@PathVariable("id") String id, Principal principal) {
-        return this.deliveryService.getActionsbyCustomer(id,principal);
+        return this.deliveryService.getActionsbyCustomer(id, principal);
     }
 
     @GetMapping("/actions/{id}")

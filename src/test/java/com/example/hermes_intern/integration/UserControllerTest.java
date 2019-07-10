@@ -1,40 +1,23 @@
 package com.example.hermes_intern.integration;
 
-import com.example.hermes_intern.controller.DeliveryController;
 import com.example.hermes_intern.controller.UserController;
-import com.example.hermes_intern.domain.Actions;
-import com.example.hermes_intern.domain.Delivery;
-import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
 import com.example.hermes_intern.repository.ReactiveUserRepository;
-import com.example.hermes_intern.security.JWTUtil;
-import com.example.hermes_intern.security.PBKDF2Encoder;
 import com.example.hermes_intern.security.model.AuthRequest;
 import com.example.hermes_intern.security.model.RegisterRequest;
 import com.example.hermes_intern.security.model.Role;
 import com.example.hermes_intern.security.model.User;
-import com.example.hermes_intern.service.DeliveryService;
-import com.example.hermes_intern.service.UserService;
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.reactive.server.WebTestClientConfigurer;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @RunWith(SpringRunner.class)
@@ -71,8 +54,7 @@ public class UserControllerTest {
     }
 
     @After
-    public void cleanUp()
-    {
+    public void cleanUp() {
         reactiveUserRepository.deleteAll().subscribe();
     }
 
@@ -87,7 +69,7 @@ public class UserControllerTest {
                 .uri("/users/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(authRequest),AuthRequest.class)
+                .body(Mono.just(authRequest), AuthRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -107,7 +89,7 @@ public class UserControllerTest {
                 .uri("/users/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(authRequest),AuthRequest.class)
+                .body(Mono.just(authRequest), AuthRequest.class)
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -128,7 +110,7 @@ public class UserControllerTest {
                 .uri("/users/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(authRequest),AuthRequest.class)
+                .body(Mono.just(authRequest), AuthRequest.class)
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -139,8 +121,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void shoudCreateUser()
-    {
+    public void shoudCreateUser() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("Mehmet");
         registerRequest.setPassword("1");
@@ -154,7 +135,7 @@ public class UserControllerTest {
                 .uri("/users/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(registerRequest),RegisterRequest.class)
+                .body(Mono.just(registerRequest), RegisterRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -164,8 +145,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void registerWithUsedCredentialsShoudReturnErrorMessage()
-    {
+    public void registerWithUsedCredentialsShoudReturnErrorMessage() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("Ahmet");
         registerRequest.setPassword("1");
@@ -179,7 +159,7 @@ public class UserControllerTest {
                 .uri("/users/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(registerRequest),RegisterRequest.class)
+                .body(Mono.just(registerRequest), RegisterRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -189,8 +169,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void registerWithEmptyPasswordShoudReturnErrorMessage()
-    {
+    public void registerWithEmptyPasswordShoudReturnErrorMessage() {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("Veli");
         registerRequest.setPassword("");
@@ -204,7 +183,7 @@ public class UserControllerTest {
                 .uri("/users/register")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(registerRequest),RegisterRequest.class)
+                .body(Mono.just(registerRequest), RegisterRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)

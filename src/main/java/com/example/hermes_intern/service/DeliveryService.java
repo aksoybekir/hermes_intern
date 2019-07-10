@@ -1,6 +1,5 @@
 package com.example.hermes_intern.service;
 
-import com.example.hermes_intern.controller.ResourceREST;
 import com.example.hermes_intern.domain.Actions;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.domain.DeliveryStatus;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.couchbase.core.query.View;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -161,9 +159,7 @@ public class DeliveryService {
         } else if (status.equals(DeliveryStatus.IN_WAREHOUSE.toString())) {
 
             deliveries = this.deliveries.getDeliveryCountByDateDeliveredToWarehouse(status, getStartOfToday(), getStartOfTomarrow());
-        }
-        else
-        {
+        } else {
             return Mono.empty();
         }
 
@@ -196,14 +192,7 @@ public class DeliveryService {
     public Mono<DeliveryCheckIn> checkInDeliveryBranch(@RequestParam(value = "id") String id) {
 
         return this.deliveries.findById(id).flatMap(response -> {
-            Delivery delivery = new Delivery();
-
-            delivery.setId(response.getId());
-            delivery.setWarehouse(response.getWarehouse());
-            delivery.setCustomer(response.getCustomer());
-            delivery.setCourierid(response.getCourierid());
-            delivery.setBranch(response.getBranch());
-            delivery.setActions(response.getActions());
+            Delivery delivery = createDeliveryFromResponse(response);
 
             delivery.setStatus(String.valueOf(DeliveryStatus.IN_BRANCH));
             delivery.getActions().setDateDeliveredToBranch(today);
@@ -218,17 +207,22 @@ public class DeliveryService {
         });
     }
 
+    private Delivery createDeliveryFromResponse(Delivery response) {
+        Delivery delivery = new Delivery();
+
+        delivery.setId(response.getId());
+        delivery.setWarehouse(response.getWarehouse());
+        delivery.setCustomer(response.getCustomer());
+        delivery.setCourierid(response.getCourierid());
+        delivery.setBranch(response.getBranch());
+        delivery.setActions(response.getActions());
+        return delivery;
+    }
+
     public Mono<DeliveryCheckIn> checkInDeliveryWarehouse(@RequestParam(value = "id") String id) {
 
         return this.deliveries.findById(id).flatMap(response -> {
-            Delivery delivery = new Delivery();
-
-            delivery.setId(response.getId());
-            delivery.setWarehouse(response.getWarehouse());
-            delivery.setCustomer(response.getCustomer());
-            delivery.setCourierid(response.getCourierid());
-            delivery.setBranch(response.getBranch());
-            delivery.setActions(response.getActions());
+            Delivery delivery = createDeliveryFromResponse(response);
 
 
             delivery.setStatus(String.valueOf(DeliveryStatus.IN_WAREHOUSE));
@@ -247,14 +241,7 @@ public class DeliveryService {
     public Mono<DeliveryCheckOut> checkOutDelivery(@RequestParam(value = "id") String id) {
 
         return this.deliveries.findById(id).flatMap(response -> {
-            Delivery delivery = new Delivery();
-
-            delivery.setId(response.getId());
-            delivery.setWarehouse(response.getWarehouse());
-            delivery.setCustomer(response.getCustomer());
-            delivery.setCourierid(response.getCourierid());
-            delivery.setBranch(response.getBranch());
-            delivery.setActions(response.getActions());
+            Delivery delivery = createDeliveryFromResponse(response);
 
 
             delivery.setStatus(String.valueOf(DeliveryStatus.ON_WAY_WAREHOUSE));
