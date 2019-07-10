@@ -15,7 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @RunWith(SpringRunner.class)
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DeliveryServiceIntegration {
+public class DeliveryControllerTest {
 
     @Autowired
     private WebTestClient webClient;
@@ -40,8 +40,9 @@ public class DeliveryServiceIntegration {
                 .expectBody()
                 .consumeWith(response -> {
                     response.getResponseBody().equals("ON_WAY_WAREHOUSE");
-        });
+                });
     }
+
     @Test
     @WithMockUser(roles = "CUSTOMER", username = "87e66464d-80e5-479d-c29-dff6")
     public void getlocationbyunauthedcustomer() throws Exception {
@@ -61,7 +62,7 @@ public class DeliveryServiceIntegration {
         this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/deliveries/checkout")
-                        .queryParam("id","b2c24658-37d4-4d77-9cfc-cea77da59323")
+                        .queryParam("id", "b2c24658-37d4-4d77-9cfc-cea77da59323")
                         .build())
                 .exchange()
                 .expectStatus()
@@ -75,8 +76,8 @@ public class DeliveryServiceIntegration {
         this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/deliveries/today")
-                        .queryParam("courierid","a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
-                        .queryParam("status","ON_COURIER")
+                        .queryParam("courierid", "a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
+                        .queryParam("status", "ON_COURIER")
                         .build())
                 .exchange()
                 .expectStatus()
@@ -90,8 +91,8 @@ public class DeliveryServiceIntegration {
         this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/deliveries/today")
-                        .queryParam("courierid","a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
-                        .queryParam("status","ON_WAY_WAREHOUSE")
+                        .queryParam("courierid", "a846ffb4-df13-44d6-8b2d-43d1c1fd2c47")
+                        .queryParam("status", "ON_WAY_WAREHOUSE")
                         .build())
                 .exchange()
                 .expectStatus()

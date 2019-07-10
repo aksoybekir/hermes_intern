@@ -4,7 +4,6 @@ package com.example.hermes_intern.model;
 import com.couchbase.client.java.repository.annotation.Field;
 import com.example.hermes_intern.domain.Actions;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;
 
 @Data

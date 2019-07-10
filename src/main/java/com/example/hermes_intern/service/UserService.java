@@ -46,8 +46,7 @@ public class UserService {
 
 
     public Mono<Message> create(RegisterRequest registerRequest) {
-        if (registerRequest.getPassword().isBlank())
-        {
+        if (registerRequest.getPassword().isBlank()) {
             return Mono.just(new Message("Password Cannot Be Empty"));
         }
 
@@ -76,11 +75,6 @@ public class UserService {
                     return x;
                 }));
 
-    }
-
-    @View
-    public Flux<User> getAll() {
-        return this.reactiveUserRepository.findAll();
     }
 
 }

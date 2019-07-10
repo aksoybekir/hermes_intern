@@ -3,7 +3,6 @@ package com.example.hermes_intern.model;
 
 import com.couchbase.client.java.repository.annotation.Field;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.couchbase.core.mapping.Document;
 
 @ToString
@@ -17,7 +16,7 @@ public class DeliveryLocation {
     private String id;
 
     @Field("Location")
-    private  String location;
+    private String location;
 
     public String getId() {
         return id;

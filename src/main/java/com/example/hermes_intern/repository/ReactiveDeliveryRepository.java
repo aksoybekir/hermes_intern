@@ -1,10 +1,8 @@
 package com.example.hermes_intern.repository;
 
 import com.example.hermes_intern.domain.Delivery;
-import com.example.hermes_intern.model.DeliveryCount;
 import org.springframework.data.couchbase.core.query.N1qlPrimaryIndexed;
 import org.springframework.data.couchbase.core.query.Query;
-import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.ReactiveCouchbaseSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -18,8 +16,6 @@ public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepo
     Mono<Long> countByStatus(String status);
 
     Mono<Delivery> findById(String id);
-
-    Flux<Delivery> findByIdAndCourierid(String id, String courierid);
 
     Flux<Delivery> findByCourierid(String courierid);
 

@@ -3,7 +3,6 @@ package com.example.hermes_intern.repository;
 import com.example.hermes_intern.security.model.User;
 import org.springframework.data.couchbase.core.query.N1qlPrimaryIndexed;
 import org.springframework.data.couchbase.core.query.Query;
-import org.springframework.data.couchbase.core.query.ViewIndexed;
 import org.springframework.data.couchbase.repository.ReactiveCouchbaseSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

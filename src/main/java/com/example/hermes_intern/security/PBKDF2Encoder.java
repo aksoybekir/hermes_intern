@@ -5,16 +5,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- *
- * @author ard333
- */
 @Component
-public class PBKDF2Encoder implements PasswordEncoder{
+public class PBKDF2Encoder implements PasswordEncoder {
 
     @Value("${springbootwebfluxjjwt.password.encoder.secret}")
     private String secret;
@@ -27,6 +24,7 @@ public class PBKDF2Encoder implements PasswordEncoder{
 
     /**
      * More info (https://www.owasp.org/index.php/Hashing_Java)
+     *
      * @param cs password
      * @return encoded password
      */

@@ -1,6 +1,6 @@
 package com.example.hermes_intern.security.model;
 
-public class  AuthRequest {
+public class AuthRequest {
     private String username;
     private String password;
 

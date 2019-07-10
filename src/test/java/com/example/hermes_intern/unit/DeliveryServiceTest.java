@@ -82,8 +82,8 @@ public class DeliveryServiceTest {
         when(reactiveDeliveryRepository.findByCourierid(principal.getName())).thenReturn(Flux.just(delivery));
 
         StepVerifier
-                .create( this.deliveryService.getCourierMyDeliveries(principal))
-                .consumeNextWith(response ->{
+                .create(this.deliveryService.getCourierMyDeliveries(principal))
+                .consumeNextWith(response -> {
                     assertEquals("courierid", response.getCourierid());
                     assertEquals("ON_COURIER", response.getStatus());
                 })
@@ -103,7 +103,7 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getByStatusOnCourier())
-                .consumeNextWith(response ->{
+                .consumeNextWith(response -> {
                     assertEquals("ON_COURIER", response.getStatus());
                 })
                 .expectComplete()
@@ -121,7 +121,7 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getByStatusInBranch())
-                .consumeNextWith(response ->{
+                .consumeNextWith(response -> {
                     assertEquals("IN_BRANCH", response.getStatus());
                 })
                 .expectComplete()
@@ -139,7 +139,7 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getByStatusInWarehouse())
-                .consumeNextWith(response ->{
+                .consumeNextWith(response -> {
                     assertEquals("IN_WAREHOUSE", response.getStatus());
                 }).expectComplete()
                 .verify();
@@ -164,7 +164,7 @@ public class DeliveryServiceTest {
     }
 
     @Test
-    public void getLocationTest(){
+    public void getLocationTest() {
 
         Delivery delivery = new Delivery();
         delivery.setId("deliveryid");
@@ -178,15 +178,15 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getLocation("deliveryid"))
-                .consumeNextWith(response ->{
-                    assertEquals(deliveryLocation.getLocation(),response.getLocation());
+                .consumeNextWith(response -> {
+                    assertEquals(deliveryLocation.getLocation(), response.getLocation());
                 })
                 .expectComplete()
                 .verify();
     }
 
     @Test
-    public void getLocationByCustomerTest(){
+    public void getLocationByCustomerTest() {
 
         Principal principal = new Principal() {
             @Override
@@ -210,15 +210,15 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(responseEntityMono)
-                .consumeNextWith(response ->{
-                    assertEquals(200,response.getStatusCodeValue());
+                .consumeNextWith(response -> {
+                    assertEquals(200, response.getStatusCodeValue());
                 })
                 .expectComplete()
                 .verify();
     }
 
     @Test
-    public void getActionsTest(){
+    public void getActionsTest() {
 
         Delivery delivery = new Delivery();
         delivery.setId("deliveryid");
@@ -233,15 +233,15 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getActions("deliveryid"))
-                .consumeNextWith(response ->{
-                    assertEquals(actions.getDateCourierRecieved(),response.getDateCourierRecieved());
+                .consumeNextWith(response -> {
+                    assertEquals(actions.getDateCourierRecieved(), response.getDateCourierRecieved());
                 })
                 .expectComplete()
                 .verify();
     }
 
     @Test
-    public void getActionsByCustomerTest(){
+    public void getActionsByCustomerTest() {
 
         Principal principal = new Principal() {
             @Override
@@ -269,35 +269,34 @@ public class DeliveryServiceTest {
 
         StepVerifier
                 .create(this.deliveryService.getLocationbyCustomer("mytestdeliveryid", principal))
-                .consumeNextWith(response ->{
-                    assertEquals(200,response.getStatusCodeValue());
+                .consumeNextWith(response -> {
+                    assertEquals(200, response.getStatusCodeValue());
                 })
                 .expectComplete()
                 .verify();
     }
 
     @Test
-    public void getDeliveryCountTest(){
+    public void getDeliveryCountTest() {
 
         DeliveryCount deliveryCount = new DeliveryCount();
         deliveryCount.setDeliveryCount((long) 5);
         deliveryCount.setStatus("ON_COURIER");
 
 
-        when(reactiveDeliveryRepository.countByStatus("ON_COURIER")).thenReturn(Mono.just((long)5));
+        when(reactiveDeliveryRepository.countByStatus("ON_COURIER")).thenReturn(Mono.just((long) 5));
 
         StepVerifier
                 .create(this.deliveryService.getDeliveryCount("ON_COURIER"))
-                .consumeNextWith(response ->{
-                    assertEquals(deliveryCount.getDeliveryCount(),response.getDeliveryCount());
+                .consumeNextWith(response -> {
+                    assertEquals(deliveryCount.getDeliveryCount(), response.getDeliveryCount());
                 })
                 .expectComplete()
                 .verify();
     }
 
     @Test
-    public void getDeliveyCountByStatusTodayTest()
-    {
+    public void getDeliveyCountByStatusTodayTest() {
         List<Delivery> deliveries = new ArrayList<>();
 
         deliveries.add(new Delivery());
