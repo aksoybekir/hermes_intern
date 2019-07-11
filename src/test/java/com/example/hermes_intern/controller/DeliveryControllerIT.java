@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 
 @RunWith(SpringRunner.class)
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = "storage.bucket=HermesTest")
+@AutoConfigureWebTestClient
 public class DeliveryControllerIT {
 
     @Autowired
@@ -37,10 +39,7 @@ public class DeliveryControllerIT {
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    response.getResponseBody().equals("ON_WAY_WAREHOUSE");
-                });
+                .expectBody();
     }
 
     @Test
