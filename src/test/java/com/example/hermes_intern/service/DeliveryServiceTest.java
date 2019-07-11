@@ -8,14 +8,12 @@ import com.example.hermes_intern.model.DeliveryLocation;
 import com.example.hermes_intern.domain.DeliveryStatus;
 import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
 import com.example.hermes_intern.security.JWTUtil;
-import com.example.hermes_intern.service.DeliveryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -31,8 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class DeliveryServiceTest {
 
     @Mock
@@ -303,10 +300,7 @@ public class DeliveryServiceTest {
         deliveries.add(new Delivery());
         deliveries.add(new Delivery());
 
-        when(reactiveDeliveryRepository.getDeliveryCountByDateCourierRecieved(DeliveryStatus.ON_COURIER.toString(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.fromIterable(deliveries));
         when(reactiveDeliveryRepository.getDeliveryCountByDateDeliveredToBranch(DeliveryStatus.IN_BRANCH.toString(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.fromIterable(deliveries));
-        when(reactiveDeliveryRepository.getDeliveryCountByDateLeftBranch(DeliveryStatus.ON_WAY_WAREHOUSE.toString(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.fromIterable(deliveries));
-        when(reactiveDeliveryRepository.getDeliveryCountByDateDeliveredToWarehouse(DeliveryStatus.IN_WAREHOUSE.toString(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.fromIterable(deliveries));
 
         StepVerifier.create(deliveryService.getDeliveyCountByStatusToday(DeliveryStatus.IN_BRANCH.toString())).consumeNextWith(deliveryCount -> {
             assertThat(deliveryCount).isNotNull();
@@ -323,7 +317,6 @@ public class DeliveryServiceTest {
 
 
         when(reactiveDeliveryRepository.getDeliveryCountByDateDeliveredToBranchAndCourierId(DeliveryStatus.IN_BRANCH.toString(), principal.getName(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.just(delivery));
-        when(reactiveDeliveryRepository.getDeliveryCountByDateCourierRecievedAndCourierId(DeliveryStatus.ON_COURIER.toString(), principal.getName(), deliveryService.getStartOfToday(), deliveryService.getStartOfTomarrow())).thenReturn(Flux.just(delivery));
 
         StepVerifier.create(deliveryService.getCourierDeliveriesToday("courierid", "IN_BRANCH")).consumeNextWith(delivery1 -> {
             assertThat(delivery1).isNotNull();

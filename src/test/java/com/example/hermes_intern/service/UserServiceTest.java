@@ -4,14 +4,12 @@ import com.example.hermes_intern.repository.ReactiveUserRepository;
 import com.example.hermes_intern.security.JWTUtil;
 import com.example.hermes_intern.security.PBKDF2Encoder;
 import com.example.hermes_intern.security.model.*;
-import com.example.hermes_intern.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -24,9 +22,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class UserServiceTests {
+@RunWith(MockitoJUnitRunner.class)
+public class UserServiceTest {
 
     @Mock
     private ReactiveUserRepository reactiveUserRepository;
