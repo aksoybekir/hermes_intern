@@ -1,7 +1,14 @@
 package com.example.hermes_intern.controller;
 
+import com.example.hermes_intern.domain.Actions;
+import com.example.hermes_intern.domain.Customer;
 import com.example.hermes_intern.domain.Delivery;
 import com.example.hermes_intern.model.DeliveryCheckOut;
+import com.example.hermes_intern.repository.ReactiveDeliveryRepository;
+import com.example.hermes_intern.security.model.User;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +19,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.Date;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,6 +30,33 @@ public class DeliveryControllerIT {
 
     @Autowired
     private WebTestClient webClient;
+
+    @Autowired
+    private ReactiveDeliveryRepository reactiveDeliveryRepository;
+
+    Delivery testDelivery;
+
+    @Before
+    public void setUp() throws Exception {
+
+        Customer testCustomer = new Customer();
+        testCustomer.setId("7e66464d-80e5-479d-811f-c2968dfedff6");
+
+        Actions testActions = new Actions();
+        testActions.setDateCourierRecieved(new Date());
+
+        testDelivery = new Delivery();
+        testDelivery.setId("b2c24658-37d4-4d77-9cfc-cea77da59323");
+        testDelivery.setCustomer(testCustomer);
+        testDelivery.setActions(testActions);
+
+        reactiveDeliveryRepository.save(testDelivery).subscribe();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        reactiveDeliveryRepository.deleteAll().subscribe();
+    }
 
     @Test
     @WithMockUser(roles = "ADMIN")
@@ -43,7 +79,7 @@ public class DeliveryControllerIT {
     }
 
     @Test
-    @WithMockUser(roles = "CUSTOMER", username = "87e66464d-80e5-479d-c29-dff6")
+    @WithMockUser(roles = "CUSTOMER", username = "wrong user ID")
     public void getlocationbyunauthedcustomer() throws Exception {
 
         this.webClient.get()

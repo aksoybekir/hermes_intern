@@ -81,7 +81,7 @@ public class UserServiceTest {
 
         when(reactiveUserRepository.findByUsername(authRequest.getUsername())).thenReturn(Mono.just(ahmetUser));
         when(passwordEncoder.encode(authRequest.getPassword())).thenReturn("Encoded Wrong Password");
-        when(jwtUtil.generateToken(ahmetUser)).thenReturn("abcdToken");
+//        when(jwtUtil.generateToken(ahmetUser)).thenReturn("abcdToken");
 
         StepVerifier.create(userService.login(authRequest))
                 .consumeNextWith(expectedResult -> {
@@ -105,8 +105,8 @@ public class UserServiceTest {
         authRequest.setPassword("1");
 
         when(reactiveUserRepository.findByUsername(authRequest.getUsername())).thenReturn(Mono.empty());
-        when(passwordEncoder.encode(authRequest.getPassword())).thenReturn(ahmetUser.getPassword());
-        when(jwtUtil.generateToken(ahmetUser)).thenReturn("abcdToken");
+//        when(passwordEncoder.encode(authRequest.getPassword())).thenReturn(ahmetUser.getPassword());
+//        when(jwtUtil.generateToken(ahmetUser)).thenReturn("abcdToken");
 
         StepVerifier.create(userService.login(authRequest))
                 .consumeNextWith(expectedResult -> {
@@ -158,7 +158,7 @@ public class UserServiceTest {
         ahmetUser.setPassword("mM2TDtzbhS5/QbUGTrNGqU3wD6isHAjOnZ1WfFeZONs=");
 
         when(reactiveUserRepository.findByUsername(registerRequest.getUsername())).thenReturn(Mono.just(ahmetUser));
-        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
+//        when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn(ahmetUser.getPassword());
 
         StepVerifier.create(userService.create(registerRequest))
                 .consumeNextWith(expectedResult -> {

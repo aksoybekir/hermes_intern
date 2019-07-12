@@ -40,4 +40,6 @@ public interface ReactiveDeliveryRepository extends ReactiveCouchbaseSortingRepo
     @Query("select customer ,courierid ,branch ,warehouse ,status ,actions, META().id AS _ID, META().cas AS _CAS from `HermesDemo` data where status=$1 and courierid=$2 and actions.dateDeliveredToBranch BETWEEN $3 AND $4")
     Flux<Delivery> getDeliveryCountByDateDeliveredToBranchAndCourierId(String status, String courierid, long today, long tomarrow);
 
+    @Query("DELETE FROM `HermesTest`")
+    Mono<Void> deleteAll();
 }
