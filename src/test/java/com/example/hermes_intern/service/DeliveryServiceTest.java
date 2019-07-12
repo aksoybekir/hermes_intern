@@ -265,7 +265,7 @@ public class DeliveryServiceTest {
 
 
         StepVerifier
-                .create(this.deliveryService.getLocationbyCustomer("mytestdeliveryid", principal))
+                .create(this.deliveryService.getActionsbyCustomer("mytestdeliveryid", principal))
                 .consumeNextWith(response -> {
                     assertEquals(200, response.getStatusCodeValue());
                 })
